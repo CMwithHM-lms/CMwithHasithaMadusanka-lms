@@ -53,8 +53,13 @@
   let rz; window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(draw, 200); });
 
   /* notices */
-  const N = C.notices || [], nb = document.getElementById('notices');
-  nb.innerHTML = N.length
-    ? N.map(n => `<a class="notice" href="${esc(n.link || '#')}" target="_blank" rel="noopener"><span class="nico">${ic('bell')}</span><span class="nt"><b>${esc(n.title)}</b><small>${esc(n.date || '')}</small></span><span class="nar">${ic('arrow')}</span></a>`).join('')
-    : '<p class="empty">No notices yet</p>';
+  const nb = document.getElementById('notices');
+  const getN = () => { try { const v = JSON.parse(localStorage.getItem('lms_notices')); if (v && Array.isArray(v.list)) return v.list; } catch (e) {} return C.notices || []; };
+  const drawN = () => {
+    const N = getN();
+    nb.innerHTML = N.length
+      ? `<div class="nrail" role="list" tabindex="0" aria-label="Notices. Swipe sideways">${N.map(n => { const l = /^https?:\/\//i.test(n.link || '') ? n.link : '', t = l ? 'a' : 'div'; return `<${t} class="ncard" role="listitem"${l ? ` href="${esc(l)}" target="_blank" rel="noopener"` : ''}><span class="nico">${ic('bell')}</span><b>${esc(n.title)}</b>${n.body ? `<span class="nbd">${esc(n.body)}</span>` : ''}<small>${esc(n.date || '')}</small></${t}>`; }).join('')}</div>${N.length > 1 ? '<p class="nhint">Swipe sideways for more</p>' : ''}`
+      : '<p class="empty">No notices yet</p>';
+  };
+  drawN(); window.addEventListener('lms-data', drawN); window.addEventListener('storage', drawN);
 })();

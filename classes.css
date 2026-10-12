@@ -37,11 +37,11 @@
 @keyframes ksh{to{background-position:-260% 0}}
 .ksub{margin:8px 0 0;font-size:.82rem;line-height:1.5;color:rgba(255,255,255,.72);animation:fadeup .8s .6s both}
 
-.kstats{position:relative;z-index:1;display:grid;grid-template-columns:.8fr .8fr 1.6fr;gap:8px;margin-top:16px}
+.kstats{position:relative;z-index:1;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:16px}
 .kst{position:relative;min-width:0;padding:11px 12px;border-radius:18px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);display:flex;flex-direction:column;gap:2px}
 .kst b{font:800 1.25rem/1.1 var(--font);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .kst small{font-size:.66rem;color:rgba(255,255,255,.65);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.kst.nx b{font-size:.92rem;margin-top:3px}
+.kst.knx b{font-size:.92rem;margin-top:3px}
 .ki{width:26px;height:26px;border-radius:9px;display:grid;place-items:center;margin-bottom:5px}
 .ki .ico svg{width:15px;height:15px;stroke-width:2.4}
 .ki.a{background:rgba(16,185,129,.25);color:#6ee7b7}
@@ -265,3 +265,9 @@
 .kpo{flex:none;display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 14px;border-radius:999px;text-decoration:none;font:800 .76rem var(--font);color:#fff;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25)}
 .kpo .ico svg{width:15px;height:15px}
 .kp .xbtn{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.25);color:#fff}
+
+/* live tile: its own full row on phones, never squeezed */
+.kst.knx{grid-column:1/-1}
+.kst.knx b,.kst.knx small{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.35}
+.kst.knx b{font-size:1rem}
+@media (min-width:700px){.kstats{grid-template-columns:.8fr .8fr 1.6fr}.kst.knx{grid-column:auto}}

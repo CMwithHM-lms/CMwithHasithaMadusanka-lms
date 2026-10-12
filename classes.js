@@ -77,14 +77,23 @@
     });
     return best;
   }
+  function yearLive() {                              // next Zoom of the student's own A/L year, even before joining
+    let best = null;
+    CLASSES.filter(c => String(c.year) === String((S.p || {}).year) && (c.includes || {}).zoom).forEach(c => (c.sessions || []).forEach(s => {
+      const z = s.zoom, t = z && z.start ? new Date(z.start).getTime() : NaN;
+      if (isNaN(t) || t + (z.minutes || 120) * 6e4 < Date.now()) return;
+      if (!best || t < best.t) best = { t, s, z, c };
+    }));
+    return best;
+  }
   function stats() {
     const a = list.filter(e => e.k === 'active').length, pe = list.filter(e => e.k === 'pending').length, nx = nextLive();
-    const st = nx ? liveState(nx.z) : null;
+    const st = nx ? liveState(nx.z) : null, yl = nx ? null : yearLive(), ys = yl ? liveState(yl.z) : null;
     $('#kstats').innerHTML = `
       <div class="kst"><span class="ki a">${ic('check')}</span><b>${a}</b><small>Active</small></div>
       <div class="kst"><span class="ki p">${ic('clock')}</span><b>${pe}</b><small>Pending</small></div>
-      <div class="kst nx${st && st.k === 'live' ? ' live' : ''}"><span class="ki n">${ic('live')}</span>
-        <b>${nx ? esc(nx.s.title) : 'No live yet'}</b><small>${nx ? esc(st.k === 'live' ? 'LIVE NOW' : st.txt) : 'Next live session'}</small></div>`;
+      <div class="kst knx${st && st.k === 'live' ? ' live' : ''}"><span class="ki n">${ic('live')}</span>
+        <b>${nx ? esc(nx.s.title) : yl ? esc(yl.c.title + ' · ' + yl.s.title) : 'No live yet'}</b><small>${nx ? esc(st.k === 'live' ? 'LIVE NOW' : st.txt) : yl ? esc(ys.txt + ' · join this class to attend') : 'Next live session'}</small></div>`;
   }
 
   /* ---------- cards ---------- */

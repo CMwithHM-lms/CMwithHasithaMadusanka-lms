@@ -6,6 +6,11 @@
   let unlocked = ss('lms_full', '') === '1';
   const sel = (id, opts) => `<select id="${id}" class="fi">${opts.map(([v, l]) => `<option value="${esc(v)}">${esc(l)}</option>`).join('')}</select>`;
 
+  document.addEventListener('keydown', e => {       // phone keyboards: "Go"/Enter must work, not only the button
+    if (e.key !== 'Enter') return;
+    const m = { kp: '#kg', cp: '#cg', rp: '#ry', p1: '#pg', aP: '#aG' }[e.target.id]; if (!m) return;
+    e.preventDefault(); const b = $(m); if (b) b.click();
+  });
   function gate(run) {
     if (M.owner) return run();
     $('#view').innerHTML = card('Checking access...', '<p>Please wait a moment.</p>');
@@ -67,14 +72,15 @@
 
     kyc() {
       $('#view').innerHTML = card('Private details of people you gave access', '<p class="hint">Name, NIC and photos sent by the people who accepted an invite. Only owners can open this.</p><div id="kv"><input type="password" id="kp" placeholder="Details password"><button class="gold" id="kg">View details</button><div class="msg" id="km"></div></div>');
-      $('#view').onclick = async e => {
-        if (!e.target.closest('#kg')) return;
+      const kgo = async () => {
+        $('#km').textContent = 'Checking...';
         const has = localStorage.getItem('lms_kyc_pw') ? JSON.parse(localStorage.getItem('lms_kyc_pw')) : '', p = $('#kp').value;
         if (!has) { if (p.length < 6) return $('#km').textContent = 'First time: choose a details password (6 or more characters).'; localStorage.setItem('lms_kyc_pw', JSON.stringify(await S.hash(p))); }
         else if ((await S.hash(p)) !== has) return $('#km').textContent = 'Wrong password.';
         const k = Object.values(S.kyc());
         $('#kv').innerHTML = k.length ? k.map(x => `<div class="r kyc" style="display:block"><b>${esc(x.name)}</b> · ${esc(x.role)}<br><small>${esc(x.email)} · NIC ${esc(x.nic)} · ${esc(x.phone)}</small><br><img src="${esc(x.front)}" alt="NIC front"><img src="${esc(x.back)}" alt="NIC back"></div>`).join('') : '<p class="empty">No details yet.</p>';
       };
+      $('#view').onclick = e => { if (e.target.closest('#kg')) kgo().catch(x => { const m = $('#km'); if (m) m.textContent = 'Could not open: ' + (x && x.message || x); }); };
     },
 
     mail() {
