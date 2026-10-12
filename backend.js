@@ -165,7 +165,7 @@
     if (u.emailVerified && mail === OWNER) role = 'owner';
     if (pend.size) { const ks = [...pend]; pend.clear(); await Promise.all(ks.map(k => doPush(k).catch(e => console.warn('sync', k, e.code || e)))); }
     if (!role && u.emailVerified) { try { const r = (await db.collection('staff').where('email', '==', mail).get()).docs.map(d => d.data()).filter(d => d.status === 'accepted').map(d => d.role); role = r.includes('owner') ? 'owner' : r.includes('admin') ? 'admin' : r.includes('analyze') ? 'analyze' : ''; } catch (e) {} }
-    staff = !!role; if (window.LMS_BE) window.LMS_BE.role = role; start();
+    staff = !!role; if (window.LMS_BE) window.LMS_BE.role = role; start(); if (!staff) setTimeout(healSid, 4000);
   });
 
   /* public site settings are readable before login (institutes on the register form, notices...) */
@@ -173,11 +173,22 @@
 
   const TRACK = Object.keys(SPEC).concat(['lms_session']);
   /* Student ID = 2 digits of the year + 6 digits, reserved in sids/{id} so two students can never get the same one */
-  const newSid = async uid => { const yy = String(new Date().getFullYear()).slice(-2);
-    for (let i = 0; i < 12; i++) { const id = yy + String(Math.floor(Math.random() * 1e6)).padStart(6, '0'); try { await db.collection('sids').doc(id).set({ uid }); return id; } catch (e) { /* taken: try another */ } }
-    throw { code: 'sid-failed' }; };
+  /* A reserved ID can be refused for two reasons: the ID is already taken (rare, just try another) or the Firestore rules do not allow sids/{id}
+     (then EVERY try is refused). Several different IDs refused in a row = the rules are the problem. */
+  const newSid = async uid => { const yy = String(new Date().getFullYear()).slice(-2); let last = '', denied = 0;
+    for (let i = 0; i < 12; i++) { const id = yy + String(Math.floor(Math.random() * 1e6)).padStart(6, '0'); try { await db.collection('sids').doc(id).set({ uid }); return id; } catch (e) { last = (e && e.code) || String(e); if (last === 'permission-denied') denied++; } }
+    throw { code: denied >= 3 ? 'sid-rules' : 'sid-failed', detail: last }; };
+  /* If a student was registered while the rules were missing, the ID is reserved the next time they sign in (after the rules are published). */
+  async function healSid() {
+    if (!user || staff) return;
+    const all = ls('lms_profiles', {}), k = Object.keys(all).find(x => all[x] && all[x].uid === user.uid), p = k && all[k];
+    if (!p || !p.sidLocal || !p.sid) return;
+    try { await db.collection('sids').doc(p.sid).set({ uid: user.uid }); delete p.sidLocal; localStorage.setItem('lms_profiles', JSON.stringify(all)); } catch (e) { /* rules still missing, or the ID is taken: try again at the next sign in */ }
+  }
   window.LMS_BE = {
     ready: true, auth, db, role: '',
+    /* staff console: students who share a Student ID (only possible if they registered while the sids rule was missing) */
+    sidAudit() { const by = {}; Object.keys(ls('lms_profiles', {})).forEach(k => { const p = ls('lms_profiles', {})[k]; if (p && p.sid && !k.startsWith('top_')) (by[p.sid] = by[p.sid] || []).push((p.name || '') + ' ' + (p.phone || k)); }); return Object.keys(by).filter(k => by[k].length > 1).map(k => ({ sid: k, students: by[k] })); },
     async findStudent(id) { try { const s = await db.collection('profiles').where('sid', '==', String(id)).limit(1).get(); if (s.empty) return null; const x = s.docs[0].data(); delete x._k; return x; } catch (e) { return null; } },
     async login(phone, pass) {
       const d = await db.collection('phones').doc(phone).get(); if (!d.exists) throw { code: 'auth/user-not-found' };
@@ -190,9 +201,11 @@
       if ((await db.collection('phones').doc(phone).get()).exists) throw { code: 'phone-taken' };
       const c = await auth.createUserWithEmailAndPassword(email, pass);
             try {
-        const id = await newSid(c.user.uid);
+        let id = '';
+        try { id = await newSid(c.user.uid); }
+        catch (e) { if (!e || e.code !== 'sid-rules') throw e; console.warn('Student ID could not be reserved: publish firestore.rules (the sids/{id} rule). The ID is created on this device and reserved at the next sign in.'); }
         await db.collection('phones').doc(phone).set({ email: email.toLowerCase(), uid: c.user.uid });
-        await db.collection('profiles').doc(phone).set(Object.assign(clean(profile), { _k: phone, uid: c.user.uid, sid: id }));
+        await db.collection('profiles').doc(phone).set(Object.assign(clean(profile), { _k: phone, uid: c.user.uid }, id ? { sid: id } : { sidLocal: true }));
       } catch (e) { try { await c.user.delete(); } catch (x) {} throw e; }
       try { c.user.sendEmailVerification(); } catch (e) {}
       await auth.signOut();
