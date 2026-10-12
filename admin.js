@@ -75,7 +75,7 @@
         const rows = all.filter(p => (!st.q || [p.name, p.phone, p.sid, p.school].join(' ').toLowerCase().includes(st.q)) && (!st.only || !mk[p.sid]));
         $('#sl').innerHTML = rows.map(p => `<label class="mr" for="m_${esc(p.sid)}"><span class="mn"><b>${esc(p.name)}</b><small>${esc(p.sid)} · ${esc(p.institute || '')}${p.school ? ' · ' + esc(p.school) : ''}</small></span><input type="number" inputmode="decimal" step="0.1" min="0" max="100" id="m_${esc(p.sid)}" data-s="${esc(p.sid)}" data-o="${mk[p.sid] ? esc(mk[p.sid].full != null ? mk[p.sid].full : (mk[p.sid].pure + mk[p.sid].applied) / 2) : ''}" value="${mk[p.sid] ? esc(mk[p.sid].full != null ? mk[p.sid].full : (mk[p.sid].pure + mk[p.sid].applied) / 2) : ''}" placeholder="/100"></label>`).join('') || `<p class="empty">${all.length ? 'No student matches.' : 'No students registered for A/L ' + st.y + ' yet.'}</p>`;
         $('#sc').textContent = st.paper && st.paper !== '__new' ? `${done} of ${all.length} students marked` : `${all.length} students in A/L ${st.y}`;
-        $('#sv').disabled = !paperName();
+        $('#sv').disabled = !paperName(); $('#sdp').hidden = !(st.paper && st.paper !== '__new');
       };
       const head = () => {
         const ps = papers();
@@ -85,7 +85,7 @@
       };
       $('#view').innerHTML = card('Students and marks', `<p class="hint">Pick the year and the paper, type each student's mark out of 100, then press Save. Students see it and get a notification straight away.</p><div id="hd"></div>
         <div class="row2"><input type="text" id="sq" placeholder="Search name, phone, ID"><label class="chk"><input type="checkbox" id="so"> Only not marked yet</label></div>
-        <div class="bar"><span id="sc"></span><button class="gold" id="sv">Save marks</button></div><div id="sl" class="mlist"></div>`);
+        <div class="bar"><span id="sc"></span><button class="gold" id="sv">Save marks</button><button class="red" id="sdp" hidden>Delete paper</button></div><div id="sl" class="mlist"></div>`);
       head(); draw();
       $('#view').onchange = e => {
         if (e.target.id === 'sy') { st.y = e.target.value; ssSet('lms_sy', st.y); st.paper = ''; head(); draw(); }
@@ -98,6 +98,7 @@
         if (e.target.matches('#sl input')) e.target.closest('.mr').classList.toggle('dirty', e.target.value !== e.target.dataset.o);
       };
       $('#view').onclick = e => {
+        if (e.target.closest('#sdp')) { if (!confirm('Delete "' + st.paper + '" and every student\'s mark for it (A/L ' + st.y + ')? This cannot be undone.')) return; toast(LMS_MARKS.removePaper(st.y, st.paper)); st.paper = ''; head(); draw(); return; }
         if (!e.target.closest('#sv')) return;
         const name = paperName(); if (!name) return toast('Choose or type a paper name');
         const items = [...document.querySelectorAll('#sl input')].filter(i => i.value !== i.dataset.o).map(i => ({ sid: i.dataset.s, mark: i.value }));
@@ -134,18 +135,19 @@
       const L = window.LMS_CONTACT, d = L.data(), done = r => { toast(P.ok(r) ? 'Saved' : r); if (P.ok(r)) V.contact(); };
       const list = (items, fn, rm) => items.map(x => `<div class="r"><span>${fn(x)}</span><button class="red" data-${rm}="${esc(x.user || x.number || x.name || x.id)}">Remove</button></div>`).join('') || '<p class="empty">Nothing added.</p>';
       $('#view').innerHTML = card('Contact Us notice', `<p class="hint">The yellow notice at the top of the Contact Us page. Leave it empty to hide it.</p><input type="text" id="cnT" placeholder="Title" value="${esc(d.notice.title)}"><textarea id="cnX" rows="3" placeholder="Notice text">${esc(d.notice.text)}</textarea><button class="gold" id="cnS">Save notice</button> <button class="ghost" id="cnC">Clear</button>`)
-        + card('Hotline numbers (WhatsApp)', `<div class="row2"><input type="text" id="wN" placeholder="07XXXXXXXX" inputmode="numeric"><input type="text" id="wL" placeholder="Label, e.g. Hotline"></div><button class="gold" id="wA">Add number</button>${list(d.whatsapp, x => `<b>${esc(x.number)}</b> <small>${esc(x.label || '')}</small>`, 'w')}`)
+        + card('WhatsApp numbers', `<div class="row2"><input type="text" id="wN" placeholder="07XXXXXXXX" inputmode="numeric"><input type="text" id="wL" placeholder="Label, e.g. Hotline"></div><button class="gold" id="wA">Add number</button>${list(d.whatsapp, x => `<b>${esc(x.number)}</b> <small>${esc(x.label || '')}</small>`, 'w')}`)
         + card('Telegram contacts', `<div class="row2"><input type="text" id="tU" placeholder="username (no @)"><input type="text" id="tL" placeholder="Label"></div><button class="gold" id="tA">Add Telegram</button>${list(d.telegram, x => `<b>@${esc(x.user)}</b> <small>${esc(x.label || '')}</small>`, 't')}`)
         + card('Telegram channels', `<input type="text" id="chN" placeholder="Channel name"><input type="text" id="chU" placeholder="https://t.me/..."><input type="text" id="chD" placeholder="Short description"><button class="gold" id="chA">Add channel</button>${list(d.channels, x => `<b>${esc(x.name)}</b><br><small>${esc(x.url)}</small>`, 'c')}`)
+        + card('Hotline call numbers', `<p class="hint">Shown at the top of Contact Us next to the support hours. Students tap one to call. Add as many as you need.</p><div class="row2"><input type="text" id="pN" placeholder="07XXXXXXXX or 011XXXXXXX" inputmode="numeric"><input type="text" id="pL" placeholder="Label, e.g. Office"></div><button class="gold" id="pA">Add number</button>${list(d.phones, x => `<b>${esc(x.number)}</b> <small>${esc(x.label || '')}</small>`, 'p')}`)
         + card('Support hours', `<input type="text" id="hrs" placeholder="Mon to Sat · 8.00 AM to 8.00 PM" value="${esc(d.hours || '')}"><button class="gold" id="hrS">Save hours</button>`)
         + card('FAQ (frequently asked questions)', `<input type="text" id="fq" placeholder="Question"><textarea id="fa" rows="2" placeholder="Answer"></textarea><button class="gold" id="fA">Add FAQ</button>${list(d.faqs, x => `<b>${esc(x.q)}</b><br><small>${esc(x.a)}</small>`, 'f')}`);
       $('#view').onclick = e => {
         const b = e.target.closest('button'); if (!b) return; const i = b.id, dd = b.dataset;
         if (i === 'cnS') return done(L.setNotice(val('cnX'), val('cnT'))); if (i === 'cnC') return done(L.clearNotice());
-        if (i === 'wA') return done(L.addWhatsApp(val('wN'), val('wL'))); if (i === 'tA') return done(L.addTelegram(val('tU'), val('tL')));
+        if (i === 'pA') return done(L.addPhone(val('pN'), val('pL'))); if (i === 'wA') return done(L.addWhatsApp(val('wN'), val('wL'))); if (i === 'tA') return done(L.addTelegram(val('tU'), val('tL')));
         if (i === 'chA') return done(L.addChannel(val('chN'), val('chU'), val('chD'))); if (i === 'hrS') return done(L.setHours(val('hrs')));
         if (i === 'fA') return done(L.addFaq(val('fq'), val('fa')));
-        if (dd.w != null) return done(L.removeWhatsApp(dd.w)); if (dd.t != null) return done(L.removeTelegram(dd.t)); if (dd.c != null) return done(L.removeChannel(dd.c)); if (dd.f != null) return done(L.removeFaq(dd.f));
+        if (dd.p != null) return done(L.removePhone(dd.p)); if (dd.w != null) return done(L.removeWhatsApp(dd.w)); if (dd.t != null) return done(L.removeTelegram(dd.t)); if (dd.c != null) return done(L.removeChannel(dd.c)); if (dd.f != null) return done(L.removeFaq(dd.f));
       };
     },
 

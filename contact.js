@@ -35,9 +35,10 @@
     const d = K.contact();
 
     // quick strip: hotline + support hours
-    const hot = (C.brand || {}).hotline;
+    const ph = (d.phones || []).map(x => ({ n: K.waNorm(x.number), l: x.label })).filter(x => x.n), hot = (C.brand || {}).hotline;
+    const calls = ph.length ? ph : (hot ? [{ n: hot, l: '' }] : []);
     $('#ctquick').innerHTML =
-      (hot ? `<a class="ctq call" href="tel:${esc(hot)}"><i data-ic="phone"></i><span><small>Hotline</small><b>${esc(fmtNum(hot))}</b></span></a>` : '') +
+      calls.map(x => `<a class="ctq call" href="tel:${esc(x.n)}"><i data-ic="phone"></i><span><small>${esc(x.l || 'Hotline')}</small><b>${esc(fmtNum(x.n))}</b></span></a>`).join('') +
       (d.hours ? `<div class="ctq"><i data-ic="clock"></i><span><small>Support hours</small><b>${esc(d.hours)}</b></span></div>` : '');
 
     // Telegram usernames

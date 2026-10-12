@@ -200,6 +200,7 @@
       });
       if (!lsSet('lms_marks', a)) return 'could not save'; cache = null; window.dispatchEvent(new Event('lms-data')); return n + ' saved';
     },
+    removePaper: (year, paper) => { const a = ls('lms_marks', []), b = a.filter(r => !(String(r.year) === String(year) && r.paper === paper)); if (!lsSet('lms_marks', b)) return 'could not save'; cache = null; window.dispatchEvent(new Event('lms-data')); return (a.length - b.length) + ' marks removed'; },
     all: () => ls('lms_marks', []),
     weak: () => {
       const s = fresh(), by = {};
@@ -257,9 +258,9 @@
 
   /* ---------- Contact Us data (Admin Panel edits this; defaults come from config.contact) ---------- */
   const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-  const CT_LISTS = { telegram: 't', whatsapp: 'w', channels: 'c', faqs: 'f' };
+  const CT_LISTS = { telegram: 't', whatsapp: 'w', channels: 'c', faqs: 'f', phones: 'p' };
   function ctGet() {
-    const src = ls('lms_contact', null) || C.contact || {}, d = Object.assign({ telegram: [], whatsapp: [], channels: [], faqs: [], notice: { title: '', text: '' }, hours: '' }, JSON.parse(JSON.stringify(src)));
+    const src = ls('lms_contact', null) || C.contact || {}, d = Object.assign({ telegram: [], whatsapp: [], channels: [], faqs: [], phones: [], notice: { title: '', text: '' }, hours: '' }, JSON.parse(JSON.stringify(src)));
     Object.keys(CT_LISTS).forEach(k => { d[k] = (Array.isArray(d[k]) ? d[k] : []).map((x, i) => Object.assign({ id: CT_LISTS[k] + i }, x)); });
     d.notice = Object.assign({ title: '', text: '' }, d.notice || {});
     return d;
@@ -294,6 +295,8 @@
     removeTelegram: key => delFrom('telegram', tgClean(key)),
     addWhatsApp: (number, label) => { const n = waNorm(number); if (!n) return 'Enter a valid number like 0771234567'; if (ctGet().whatsapp.some(x => x.number === n)) return 'already added'; return addTo('whatsapp', { number: n, label: label || '' }); },
     removeWhatsApp: key => delFrom('whatsapp', waNorm(key) || key),
+    addPhone: (number, label) => { const n = waNorm(number); if (!n) return 'Enter a valid number like 0112345678 or 0771234567'; if (ctGet().phones.some(x => x.number === n)) return 'already added'; return addTo('phones', { number: n, label: label || '' }); },
+    removePhone: key => delFrom('phones', waNorm(key) || key),
     setNotice: (text, title) => { const d = ctGet(); d.notice = { title: title || d.notice.title || '', text: String(text || '').trim(), date: ymd(new Date()) }; return ctSave(d); },
     clearNotice: () => { const d = ctGet(); d.notice = { title: '', text: '' }; return ctSave(d); },
     addChannel: (name, url, desc) => { const u = chanUrl(url); if (!String(name || '').trim()) return 'Enter a channel name'; if (!u) return 'Enter a Telegram link like https://t.me/yourchannel'; return addTo('channels', { name: String(name).trim(), url: u, desc: desc || '' }); },
