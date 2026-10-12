@@ -3,7 +3,8 @@
 (function () {
   const F = window.firebase, CFG = window.FIREBASE_CONFIG;
   if (!F || !CFG || !CFG.apiKey || /^PASTE/.test(CFG.apiKey)) { window.LMS_BE = { ready: false, why: F ? 'config' : 'sdk' }; console.warn('Firebase is not configured: running on this device only.'); return; }
-  F.initializeApp(CFG); const auth = F.auth(), db = F.firestore();
+  let auth, db;
+  try { F.initializeApp(CFG); auth = F.auth(); db = F.firestore(); } catch (e) { window.LMS_BE = { ready: false, why: 'init', err: String((e && e.message) || e) }; console.warn(e); return; }
   try { db.enablePersistence({ synchronizeTabs: true }).catch(() => {}); } catch (e) {}   // local cache: repeat visits cost far fewer reads
   const OWNER = 'thiran.anujitha07@gmail.com', lsRaw = Storage.prototype.setItem;
   const ls = (k, d) => { try { const v = JSON.parse(localStorage.getItem(k)); return v == null ? d : v; } catch (e) { return d; } };

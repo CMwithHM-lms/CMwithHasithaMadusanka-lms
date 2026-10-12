@@ -1,4 +1,11 @@
-const beMsg=()=>!window.LMS_BE?'backend.js is not loaded. Upload backend.js and the new index.html, register.html, reset.html to GitHub, then hard refresh.':LMS_BE.why==='sdk'?'Firebase could not load. Check the internet connection or turn off the ad blocker.':'firebase-config.js has no real keys yet.';
+const beMsg=()=>!window.LMS_BE?'backend.js did not start. Open the browser console (F12) for the error.':LMS_BE.why==='sdk'?'Firebase could not load. Check the internet connection or turn off the ad blocker.':LMS_BE.why==='init'?'Firebase failed to start: '+LMS_BE.err:'firebase-config.js has no real keys yet.';
+/* Loads Firebase + backend.js by itself when the page does not include them (old html on the server), and says exactly which file failed. */
+const needBE=()=>new Promise(res=>{
+  if(window.LMS_BE) return res('');
+  const g='https://www.gstatic.com/firebasejs/10.14.1/firebase-',L=[g+'app-compat.js',g+'auth-compat.js',g+'firestore-compat.js','firebase-config.js','backend.js'];let i=0;
+  (function n(){ if(i>=L.length) return res(''); const s=document.createElement('script'); s.src=L[i]+(i>2?'?v='+Date.now():'');
+    s.onload=()=>{i++;n();}; s.onerror=()=>res(L[i].split('/').pop()+' could not be loaded (file missing on GitHub, wrong name, or blocked).'); document.head.appendChild(s); })();
+});
 const $=s=>document.querySelector(s);
 
 // duckling writes the title
@@ -43,12 +50,12 @@ $('#cpass').addEventListener('input',checkMatch);
 let target=null;
 
 // step 1: verify the details given at registration
-$('#f1').addEventListener('submit',ev=>{
+$('#f1').addEventListener('submit',async ev=>{
   ev.preventDefault();const f=$('#f1');f.querySelector('.err').className='err';
   const phone=$('#phone').value.replace(/\D/g,''),email=$('#email').value.trim().toLowerCase(),wa=$('#wa').value.replace(/\D/g,'');
   if(!/^0\d{9}$/.test(phone)) return fail(f,'phone','දුරකථන අංකය වැරදියි | Invalid phone number');
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return fail(f,'email','Email එක වැරදියි | Enter a valid email');
-  if(!window.LMS_BE||!LMS_BE.ready) return fail(f,'',beMsg());
+  {const w=await needBE(); if(!window.LMS_BE||!LMS_BE.ready) return fail(f,'',w||beMsg());}
   LMS_BE.reset(phone,email).then(()=>{const e=f.querySelector('.err');e.className='err good show';e.textContent='We sent a password reset link to '+email+'. Open it, set a new password, then log in.';$('#go').hidden=true;})
     .catch(()=>fail(f,'','ලබාදුන් තොරතුරු ගැලපෙන්නේ නෑ | The details do not match our records'));
 });
