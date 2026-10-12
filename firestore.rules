@@ -1,15 +1,23 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{db}/documents {
+    // ---------- who is who ----------
     function me() { return request.auth != null; }
     function mail() { return request.auth.token.email.lower(); }
     function ver() { return me() && request.auth.token.email_verified == true; }
-    function isOwner() { return ver() && mail() == 'thiran.anujitha07@gmail.com'; }
     function acc(r) { let p = /databases/$(db)/documents/staff/$(mail() + '__' + r); return exists(p) && get(p).data.status == 'accepted'; }
-    function isAdmin() { return isOwner() || (ver() && (acc('admin') || acc('owner'))); }
+    // the owner email below must be the same as OWNER in backend.js and ownerEmail in config.js
+    function isOwner() { return ver() && (mail() == 'thiran.anujitha07@gmail.com' || acc('owner')); }
+    function isAdmin() { return isOwner() || (ver() && acc('admin')); }
     function isStaff() { return isAdmin() || (ver() && acc('analyze')); }
     // a student may not change these once they exist
     function same(f) { return !(f in resource.data) || request.resource.data.get(f, null) == resource.data[f]; }
+    // an approved payment whose valid days are over may be paid again
+    function over(o) { return o.status != 'approved' || (o.get('expires', null) != null && o.expires < request.time.toMillis()); }
+    function paid(c) {
+      let p = /databases/$(db)/documents/orders/$(request.auth.uid + '_' + c);
+      return exists(p) && get(p).data.status == 'approved' && (get(p).data.get('expires', null) == null || get(p).data.expires > request.time.toMillis());
+    }
 
     // phone -> email lookup used by the Phone + Password login (get only, never list)
     match /phones/{p} {
@@ -18,26 +26,44 @@ service cloud.firestore {
       allow create: if me() && request.resource.data.keys().hasOnly(['email', 'uid']) && request.resource.data.uid == request.auth.uid;
       allow update, delete: if isOwner();
     }
+    // reserved Student IDs (nobody can ever get the same ID twice)
+    match /sids/{id} {
+      allow create: if me() && request.resource.data.keys().hasOnly(['uid']) && request.resource.data.uid == request.auth.uid;
+      allow read: if isStaff();
+      allow update, delete: if isOwner();
+    }
     match /profiles/{p} {
-      allow read: if me() && (resource.data.uid == request.auth.uid || isAdmin());
+      allow read: if me() && (resource.data.uid == request.auth.uid || isStaff());
       allow create: if me() && request.resource.data.uid == request.auth.uid;
       allow update: if me() && ((resource.data.uid == request.auth.uid && request.resource.data.uid == resource.data.uid
-                                 && same('phone') && same('email') && same('year') && same('sid')) || isAdmin());
+                                 && same('phone') && same('email') && same('year') && same('sid') && same('nic') && same('attempt') && same('institute') && same('district') && same('town')) || isAdmin());
       allow delete: if isOwner();
     }
     // students can create / edit their own order only as draft or pending. Only an admin can approve, reject or extend.
     match /orders/{id} {
       allow read: if me() && (resource.data._uid == request.auth.uid || isAdmin());
-      allow create: if me() && request.resource.data._uid == request.auth.uid && request.resource.data.status in ['draft', 'pending'];
-      allow update: if isAdmin() || (me() && resource.data._uid == request.auth.uid && request.resource.data._uid == resource.data._uid
-                                     && resource.data.status != 'approved' && request.resource.data.status in ['draft', 'pending']
-                                     && request.resource.data.get('extra', 0) == resource.data.get('extra', 0)
-                                     && request.resource.data.get('approved', null) == resource.data.get('approved', null));
-      allow delete: if isAdmin() || (me() && resource.data._uid == request.auth.uid && resource.data.status != 'approved');
+      allow create: if me() && request.resource.data._uid == request.auth.uid && id == request.auth.uid + '_' + request.resource.data.classId
+                       && request.resource.data.status in ['draft', 'pending']
+                       && !('approved' in request.resource.data) && !('expires' in request.resource.data) && !('extra' in request.resource.data);
+      allow update: if isAdmin() || (me() && resource.data._uid == request.auth.uid && request.resource.data._uid == resource.data._uid && over(resource.data)
+                                     && request.resource.data.status in ['draft', 'pending']
+                                     && !('approved' in request.resource.data) && !('expires' in request.resource.data) && !('extra' in request.resource.data));
+      allow delete: if isAdmin() || (me() && resource.data._uid == request.auth.uid && over(resource.data));
+    }
+    // Zoom link + recordings: only staff and students whose payment for that class is approved and still valid
+    match /sessions/{c} {
+      allow read: if isStaff() || (me() && paid(c));
+      allow write: if isAdmin();
     }
     match /complaints/{id} {
       allow read: if me() && (resource.data._uid == request.auth.uid || isAdmin());
-      allow create: if me() && request.resource.data._uid == request.auth.uid && request.resource.data.get('status', '') != 'resolved';
+      allow create: if me() && request.resource.data._uid == request.auth.uid && request.resource.data.get('status', '') != 'resolved' && id.matches(request.auth.uid + '_.*');
+      allow update, delete: if isAdmin();
+    }
+    // profile change requests
+    match /requests/{id} {
+      allow read: if me() && (resource.data._uid == request.auth.uid || isAdmin());
+      allow create: if me() && request.resource.data._uid == request.auth.uid && request.resource.data.status == 'pending' && id.matches(request.auth.uid + '_.*');
       allow update, delete: if isAdmin();
     }
     match /marks/{id} { allow read, write: if isStaff(); }
@@ -50,18 +76,21 @@ service cloud.firestore {
     // attendance: staff write it (with the student's uid), a student reads only their own
     match /att/{id} { allow read: if me() && (resource.data.get('_uid', '') == request.auth.uid || isStaff()); allow write: if isAdmin(); }
     match /emailreq/{id} { allow create: if isStaff(); allow read: if isAdmin(); allow delete: if isOwner(); }
+    // access: the owner gives any role. An admin may invite another admin / paper analyze person (their details go to the owner).
     match /staff/{id} {
       allow read: if me() && (resource.data.email == mail() || isAdmin());
-      allow create, delete: if isOwner();
+      allow create: if isOwner() || (isAdmin() && request.resource.data.role in ['admin', 'analyze'] && request.resource.data.status == 'invited');
+      allow delete: if isOwner();
       allow update: if isOwner() || (ver() && resource.data.email == mail() && resource.data.status == 'invited' && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'at']));
     }
+    // identity details of staff: only the owner can read them
     match /kyc/{id} {
       allow create: if ver() && request.resource.data.email == mail();
       allow read, update, delete: if isOwner();
     }
     match /kv/{k} {
-      allow read: if k in ['lms_site_cfg', 'lms_contact'] || (me() && k == 'lms_ach_admin') || isOwner();
-      allow write: if (k == 'lms_site_cfg' && isOwner()) || (k in ['lms_contact', 'lms_ach_admin'] && isAdmin()) || (k in ['lms_owner_email', 'lms_ctrl_pw', 'lms_kyc_pw'] && isOwner());
+      allow read: if k in ['lms_site_cfg', 'lms_contact', 'lms_notices', 'lms_classes'] || (me() && k == 'lms_ach_admin') || isOwner();
+      allow write: if (k == 'lms_site_cfg' && isOwner()) || (k in ['lms_contact', 'lms_notices', 'lms_classes', 'lms_ach_admin'] && isAdmin()) || (k in ['lms_ctrl_pw', 'lms_kyc_pw'] && isOwner());
     }
   }
 }

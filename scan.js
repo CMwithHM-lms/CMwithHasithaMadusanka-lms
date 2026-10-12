@@ -22,12 +22,12 @@
   const err = t => { const e = $('#scErr'); e.textContent = t || ''; e.hidden = !t; };
 
   /* ---------- gather everything about one student ---------- */
-  function lookup(raw) {
-    let id = String(raw || '').trim(); if (id.toUpperCase().startsWith(PREFIX.toUpperCase())) id = id.slice(PREFIX.length); id = id.trim();
-    const p = Object.values(ls('lms_profiles', {})).find(x => x && x.sid === id);
+  function lookup(raw, found) {
+    let id = String(raw || '').trim(); if (id.toUpperCase().startsWith(PREFIX.toUpperCase())) id = id.slice(PREFIX.length); id = id.replace(/\s+/g, '');
+    const p = found || Object.values(ls('lms_profiles', {})).find(x => x && String(x.sid) === id);
     if (!p) return { ok: false, id };
     const year = String(p.year || '2027'), tot = r => (r.pure + r.applied) / 2;
-    const rows = K.load(year, id).filter(r => r.sid === id).sort((a, b) => (a.date || '9999').localeCompare(b.date || '9999'));
+    const rows = (LMS_MARKS.all().filter(r => r.sid === id && String(r.year) === year)).slice().sort((a, b) => (a.date || '9999').localeCompare(b.date || '9999'));
     const last = rows[rows.length - 1];
     let rank = null;
     if (last) { const cohort = K.load(year, id).filter(r => r.year === year && r.paper === last.paper); rank = { r: 1 + cohort.filter(x => tot(x) > tot(last)).length, n: cohort.length }; }
@@ -84,11 +84,17 @@
     renderIcons(box);
     box.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
-  const show = raw => { const d = lookup(raw); draw(d); return d.ok; };
+  /* the name list on this device may not have loaded yet (or the student never opened the site): ask the server directly */
+  let LAST = null;
+  const show = async raw => {
+    let d = lookup(raw);
+    if (!d.ok && window.LMS_BE && LMS_BE.ready && LMS_BE.findStudent) { err('Looking up ' + d.id + '...'); const p = await LMS_BE.findStudent(d.id); if (p) d = lookup(raw, p); }
+    LAST = d; draw(d); return d.ok;
+  };
 
   $('#scRes').addEventListener('click', e => {
     const m = e.target.closest('#scMark'), u = e.target.closest('#scUndo');
-    if (m) { const r = LMS_ATT.mark(m.dataset.id); toast(r === 'marked' ? 'Attendance marked' : r); show(m.dataset.id); }
+    if (m) { const r = LMS_ATT.mark(m.dataset.id, undefined, undefined, (LAST && LAST.p && LAST.p.uid) || ''); toast(r === 'marked' ? 'Attendance marked' : r); show(m.dataset.id); }
     if (u) { LMS_ATT.unmark(u.dataset.id, K.ymd(new Date())); toast('Removed'); show(u.dataset.id); }
   });
   $('#scForm').addEventListener('submit', e => { e.preventDefault(); const v = $('#scId').value.trim(); if (!v) return err('Type a Student ID first.'); show(v); });

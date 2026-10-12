@@ -287,9 +287,9 @@
      LMS_STORE.extend(orderId, days)  → valid days manually extend (students never see this) */
   window.LMS_STORE = {
     orders: () => allOrders().map(o => ({ id: o.id, student: o.name, sid: o.sid, classId: o.classId, status: o.status })),
-    approve: id => { const a = allOrders(), o = a.find(x => x.id === id); if (!o) return 'not found'; o.status = 'approved'; o.approved = Date.now(); lsSet('lms_orders', a); if (window.LMS_NOTIFY) LMS_NOTIFY.check(); return 'approved'; },
-    extend: (id, days) => { const a = allOrders(), o = a.find(x => x.id === id); if (!o) return 'not found'; o.extra = (o.extra || 0) + Number(days || 0); lsSet('lms_orders', a); if (window.LMS_NOTIFY) LMS_NOTIFY.check(); return 'extended by ' + days + ' days (total extra ' + o.extra + ')'; },
-    reject: (id, note) => { const a = allOrders(), o = a.find(x => x.id === id); if (!o) return 'not found'; o.status = 'rejected'; o.note = note || ''; lsSet('lms_orders', a); if (window.LMS_NOTIFY) LMS_NOTIFY.check(); return 'rejected'; }
+    approve: id => LMS_ORDERS.approve(id),
+    extend: (id, days) => LMS_ORDERS.extend(id, days),
+    reject: (id, note) => LMS_ORDERS.reject(id, note)
   };
 
   syncFilter(); render();

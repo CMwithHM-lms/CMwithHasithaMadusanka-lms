@@ -123,7 +123,7 @@
     if (wait > 0) return showErr('Please wait ' + wait + ' seconds before sending another complaint.');
     if (mine().filter(c => Date.now() - c.created < 864e5).length >= DAILY) return showErr('You have already sent ' + DAILY + ' complaints today. Please wait for a reply.');
     const all = K.complaints(), rec = {
-      id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), ref: 'CMP-' + String(all.length + 1).padStart(4, '0'),
+      id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), ref: 'CMP-' + Date.now().toString(36).toUpperCase().slice(-6),
       sid, name: p.name || '', phone, whatsapp: p.whatsapp || '', email: p.email || '', telegram: p.telegram ? '@' + p.telegram : '',
       institute: p.institute || '', year: p.year || '', attempt: p.attempt || '', school: p.school || '', district: p.district || '', town: p.town || '',
       category: $('#cmpCat').value, text, words: n, status: 'new', reply: '', created: Date.now()

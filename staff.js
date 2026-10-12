@@ -8,7 +8,7 @@
   const hash = async s => { try { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)); return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join(''); } catch (e) { return btoa(unescape(encodeURIComponent(s))); } };
   const esc = s => String(s ?? '').replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
   const em = s => String(s || '').trim().toLowerCase();
-  const PERMS = { notice: 'Notices', contact: 'Contact Us page', links: 'YouTube / Zoom links', analyze: 'Paper Mark Analyze' };
+  const PERMS = { pay: 'Payments', analyze: 'Students & marks', notice: 'Home notices', contact: 'Contact Us & complaints', links: 'Zoom & recordings', classes: 'Classes' };
 
   const db = () => Object.assign({ list: [] }, ls('lms_staff', {}));           // list: {email, role:'admin'|'owner'|'analyze', status:'invited'|'accepted'|'declined', pw, perms, at}
   const save = d => put('lms_staff', d);
@@ -40,7 +40,7 @@
     const d = db(), old = d.list.find(x => em(x.email) === email && x.role === role);
     if (old && old.status !== 'declined') return 'This email already has ' + role + ' access or a pending invite.';
     d.list = d.list.filter(x => !(em(x.email) === email && x.role === role));
-    d.list.push({ email, role, status: 'invited', pw: await hash(pw), perms: perms || {}, at: Date.now() });
+    d.list.push({ email, role, status: 'invited', pw: await hash(pw), perms: perms || {}, by: me().email, at: Date.now() });
     return save(d) ? 'ok' : 'could not save';
   }
   const remove = (email, role) => { const d = db(); d.list = d.list.filter(x => !(em(x.email) === em(email) && x.role === role)); ls('lms_kyc', {}); const k = ls('lms_kyc', {}); delete k[em(email) + '|' + role]; put('lms_kyc', k); return save(d); };
@@ -88,7 +88,7 @@
         try {
           const a = b.querySelector('#fF').files[0], c = b.querySelector('#fB').files[0];
           const r = await accept(inv, { name: v('#fN'), nic: v('#fC'), phone: v('#fP').replace(/\D/g, ''), pw: b.querySelector('#fW').value, front: a ? await shrink(a) : '', back: c ? await shrink(c) : '' });
-          if (r === 'ok') { b.remove(); location.href = 'admin.html'; } else fE.textContent = r;
+          if (r === 'ok') { b.remove(); location.href = inv.role === 'owner' ? 'owner.html' : 'admin.html'; } else fE.textContent = r;
         } catch (e) { fE.textContent = 'Could not read the photos. Try again.'; }
       };
     };

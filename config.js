@@ -159,4 +159,11 @@ window.LMS_CONFIG = {
 };
 
 /* Site overrides saved from the Control Panel (top-level keys replace the defaults above) */
-try{const o=JSON.parse(localStorage.getItem('lms_site_cfg')||'{}');Object.keys(o).forEach(k=>{window.LMS_CONFIG[k]=o[k];});}catch(e){}
+try{const o=JSON.parse(localStorage.getItem('lms_site_cfg')||'{}');Object.keys(o).forEach(k=>{window.LMS_CONFIG[k]=(k==='store'&&o[k]&&typeof o[k]==='object')?Object.assign({},window.LMS_CONFIG.store,o[k]):o[k];});}catch(e){}
+/* Admin Panel data (live from Firebase): classes, notices, per-class Zoom + recordings */
+(function(){
+  const g=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v;}catch(e){return d;}}, C=window.LMS_CONFIG;
+  const cl=g('lms_classes',null); if(cl&&Array.isArray(cl.list)) C.store=Object.assign({},C.store,{classes:cl.list});
+  const nt=g('lms_notices',null); if(nt&&Array.isArray(nt.list)) C.notices=nt.list;
+  const ss=g('lms_sessions',{}); ((C.store&&C.store.classes)||[]).forEach(c=>{ if(ss[c.id]&&Array.isArray(ss[c.id].list)) c.sessions=ss[c.id].list; });
+})();

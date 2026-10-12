@@ -146,7 +146,7 @@
     if (K.isVerified(sid)) $('#me').insertAdjacentHTML('beforeend', K.tickAlways('mini'));
   };
   decorateMenu();
-  if (window.LMS_STAFF) { const m = LMS_STAFF.me(); if (m.admin || m.analyze) $('#menu .mi[data-go="qr"]').insertAdjacentHTML('afterend', `<a class="mi" href="admin.html">${ic('profile')}Control Panel</a>`); }
+  if (window.LMS_STAFF) { const m = LMS_STAFF.me(); if (m.admin || m.analyze) $('#menu .mi[data-go="qr"]').insertAdjacentHTML('afterend', `<a class="mi" href="admin.html">${ic('profile')}Admin Panel</a>` + (m.owner ? `<a class="mi" href="owner.html">${ic('lock')}Owner Panel</a>` : '')); }
   window.addEventListener('lms-data', () => { decorateMenu(); const n = $('#idName'); if (n) n.innerHTML = LMS_CORE.nameHtml(p.name || '', sid); });
 
   /* premium ID card (used on Home and My Profile) */

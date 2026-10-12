@@ -183,10 +183,24 @@
   };
   window.LMS_MARKS = {
     add: (id, paper, pure, applied, date, year) => {
-      const a = ls('lms_marks', []);
-      a.push({ sid: String(id), year: String(year || who().year), paper, pure: +pure, applied: +applied, date: date || today() });
+      const a = ls('lms_marks', []), y = String(year || who().year), i = a.findIndex(r => r.sid === String(id) && String(r.year) === y && r.paper === paper);
+      const rec = { sid: String(id), year: y, paper, pure: +pure, applied: +applied, date: date || today() };
+      if (i >= 0) a[i] = rec; else a.push(rec);
       if (!lsSet('lms_marks', a)) return 'could not save'; cache = null; window.dispatchEvent(new Event('lms-data')); return 'added';
     },
+    /* Full marks (one mark out of 100 for the whole paper): list = [{sid, mark}], empty mark = remove that student's mark */
+    setMany: (year, paper, date, list) => {
+      const a = ls('lms_marks', []), y = String(year); let n = 0;
+      list.forEach(({ sid, mark }) => {
+        const i = a.findIndex(r => r.sid === String(sid) && String(r.year) === y && r.paper === paper);
+        if (mark === '' || mark == null) { if (i >= 0) { a.splice(i, 1); n++; } return; }
+        const m = Math.round(Number(mark) * 10) / 10; if (!(m >= 0 && m <= 100)) return;
+        const rec = { sid: String(sid), year: y, paper, pure: m, applied: m, full: m, date: date || today() };
+        if (i >= 0) a[i] = Object.assign({}, a[i], rec, { date: a[i].date || rec.date }); else a.push(rec); n++;
+      });
+      if (!lsSet('lms_marks', a)) return 'could not save'; cache = null; window.dispatchEvent(new Event('lms-data')); return n + ' saved';
+    },
+    all: () => ls('lms_marks', []),
     weak: () => {
       const s = fresh(), by = {};
       s.rows.filter(r => !r.demo).forEach(r => { (by[r.sid + '|' + r.year] = by[r.sid + '|' + r.year] || []).push(r); });
@@ -228,11 +242,11 @@
     return { offset: off, from: a, to: b, attended: rows.length > 0, dates: rows.map(r => r.date), rows };
   }
   window.LMS_ATT = {
-    mark: (sid, date, classId) => {
+    mark: (sid, date, classId, uidHint) => {
       const a = attAll(), d = date || ymd(new Date()), c = classId || '';
       if (a.some(r => r.sid === String(sid) && r.date === d && (r.classId || '') === c)) return 'already marked';
       const pr = Object.values(ls('lms_profiles', {})).find(x => x && x.sid === String(sid)) || {};
-      a.push({ sid: String(sid), date: d, classId: c, t: Date.now(), _uid: pr.uid || '' });
+      a.push({ sid: String(sid), date: d, classId: c, t: Date.now(), _uid: pr.uid || uidHint || '' });
       if (!lsSet('lms_att', a)) return 'could not save'; window.dispatchEvent(new Event('lms-data')); return 'marked';
     },
     unmark: (sid, date) => { lsSet('lms_att', attAll().filter(r => !(r.sid === String(sid) && r.date === date))); return 'removed'; },
@@ -287,13 +301,27 @@
     addFaq: (q, a) => (q && a) ? addTo('faqs', { q, a }) : 'Enter both question and answer',
     removeFaq: key => { const d = ctGet(); const n = d.faqs.length; d.faqs = d.faqs.filter(x => x.id !== key && x.q !== key); return d.faqs.length === n ? 'not found' : ctSave(d); },
     setHours: t => { const d = ctGet(); d.hours = String(t || '').trim(); return ctSave(d); },
-    complaints: () => ccAll().map((c, i) => Object.assign({ no: i + 1 }, c)).reverse(),
+    complaints: () => ccAll().slice().sort((a, b) => (a.created || 0) - (b.created || 0)).map((c, i) => Object.assign({ no: i + 1 }, c)).reverse(),
     reply: (id, text) => { const a = ccAll(), c = a.find(x => x.id === id || x.ref === id); if (!c) return 'not found'; c.reply = String(text || '').trim(); c.repliedAt = Date.now(); c.status = 'resolved'; lsSet('lms_complaints', a); window.dispatchEvent(new Event('lms-contact')); return 'replied'; },
     setStatus: (id, status) => { const a = ccAll(), c = a.find(x => x.id === id || x.ref === id); if (!c) return 'not found'; c.status = status; lsSet('lms_complaints', a); window.dispatchEvent(new Event('lms-contact')); return 'updated'; },
     telegramLinks: () => Object.values(ls('lms_profiles', {})).filter(p => p && p.telegram).map(p => ({ sid: p.sid, name: p.name, phone: p.phone, whatsapp: p.whatsapp || '', telegram: '@' + p.telegram, connected: p.telegramAt ? new Date(p.telegramAt).toLocaleString('en-GB') : '' })),
     reset: () => { try { localStorage.removeItem('lms_contact'); } catch (e) {} window.dispatchEvent(new Event('lms-contact')); return 'back to config defaults'; }
   };
 
+
+  /* ---------- Payments (orders): the Admin Panel uses this ---------- */
+  const oAll = () => ls('lms_orders', []);
+  const clsOf = id => ((window.LMS_CONFIG && LMS_CONFIG.store && LMS_CONFIG.store.classes) || []).find(c => c.id === id);
+  const expiresOf = o => { const c = clsOf(o.classId) || {}; return c.validDays ? (o.approved || Date.now()) + (c.validDays + (o.extra || 0)) * 864e5 : null; };
+  const oEdit = (id, fn) => { const a = oAll(), o = a.find(x => x.id === id); if (!o) return 'not found'; const r = fn(o); if (!lsSet('lms_orders', a)) return 'could not save'; window.dispatchEvent(new Event('lms-data')); if (window.LMS_NOTIFY) try { LMS_NOTIFY.check(); } catch (e) {} return r; };
+  window.LMS_ORDERS = {
+    list: () => oAll().slice().sort((a, b) => (b.submitted || b.created || 0) - (a.submitted || a.created || 0)),
+    classOf: clsOf,
+    classTitle: id => { const c = clsOf(id); return c ? c.title + ' · ' + c.month + ' · ' + c.mode : id; },
+    approve: id => oEdit(id, o => { o.status = 'approved'; o.approved = Date.now(); o.expires = expiresOf(o); delete o.note; return 'approved'; }),
+    reject: (id, note) => oEdit(id, o => { o.status = 'rejected'; o.note = note || ''; delete o.expires; return 'rejected'; }),
+    extend: (id, days) => oEdit(id, o => { o.extra = (o.extra || 0) + Number(days || 0); if (o.status === 'approved') o.expires = expiresOf(o); return 'extended by ' + days + ' days (total extra ' + o.extra + ')'; })
+  };
   window.addEventListener('storage', () => { cache = null; });
   if (document.body) sprite(); else document.addEventListener('DOMContentLoaded', sprite);
 })();
