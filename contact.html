@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Contact Us | COMBINED MATHS with Hasitha Madusanka</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="home.css">
+<link rel="stylesheet" href="scene.css">
+<link rel="stylesheet" href="contact.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#c8963a">
+</head>
+<body data-page="contact">
+<main class="ctwrap">
+
+  <!-- animated title -->
+  <header class="cthero">
+    <span class="ctorb o1"></span><span class="ctorb o2"></span><span class="ctorb o3"></span>
+    <div class="cttop">
+      <svg class="ctart" viewBox="0 0 120 120" aria-hidden="true">
+        <defs>
+          <linearGradient id="cb1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#6d28d9"/></linearGradient>
+          <linearGradient id="cb2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3c4"/><stop offset=".55" stop-color="#f2c46d"/><stop offset="1" stop-color="#c8963a"/></linearGradient>
+        </defs>
+        <ellipse cx="60" cy="110" rx="36" ry="4.5" fill="#000" opacity=".25"/>
+        <g class="ctb1"><path d="M14 22h58a10 10 0 0 1 10 10v26a10 10 0 0 1-10 10H40L22 84V68h-8a10 10 0 0 1-10-10V32a10 10 0 0 1 10-10z" fill="url(#cb1)"/>
+          <circle cx="29" cy="45" r="4" fill="#fff" opacity=".9"/><circle cx="43" cy="45" r="4" fill="#fff" opacity=".9"/><circle cx="57" cy="45" r="4" fill="#fff" opacity=".9"/></g>
+        <g class="ctb2"><path d="M54 52h50a10 10 0 0 1 10 10v22a10 10 0 0 1-10 10h-6v14l-16-14H54a10 10 0 0 1-10-10V62a10 10 0 0 1 10-10z" fill="url(#cb2)"/>
+          <rect x="56" y="64" width="38" height="4.5" rx="2.2" fill="#2a1c05" opacity=".55"/><rect x="56" y="75" width="26" height="4.5" rx="2.2" fill="#2a1c05" opacity=".4"/></g>
+        <path class="ctsp s1" d="M104 18l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#f2c46d"/>
+        <path class="ctsp s2" d="M10 96l1.6 4 4 1.6-4 1.6-1.6 4-1.6-4-4-1.6 4-1.6z" fill="#5eead4"/>
+      </svg>
+      <div class="cttx">
+        <h1 class="cttitle" id="cttitle" aria-label="Contact Us">Contact Us</h1>
+        <p class="ctsub">We are here to help. Message us, join our channels or send a complaint.</p>
+      </div>
+    </div>
+    <div class="ctquick" id="ctquick"></div>
+  </header>
+
+  <div class="ctgrid">
+    <div class="ctcol">
+      <section class="ctbar" id="barTg" aria-labelledby="hTg"></section>
+      <section class="ctbar" id="barWa" aria-labelledby="hWa"></section>
+      <section class="ctbar ctnotice" id="barNotice" aria-labelledby="hNo" hidden></section>
+      <section class="ctbar" id="barCh" aria-labelledby="hCh"></section>
+    </div>
+
+    <div class="ctcol">
+      <section class="ctbar" id="barCmp" aria-labelledby="hCmp">
+        <div class="cth"><span class="cti ic-cmp"><i data-ic="chat"></i></span><div><h2 id="hCmp">Complaints</h2><small>Tell us what went wrong. Write as much as you need.</small></div></div>
+        <div class="ctme" id="ctme"></div>
+        <form id="cmpForm" novalidate>
+          <div class="ctf">
+            <label for="cmpCat">What is it about?</label>
+            <div class="ctsel"><select id="cmpCat" class="fi"></select><i data-ic="chev"></i></div>
+          </div>
+          <div class="ctf">
+            <label for="cmpText">Your complaint</label>
+            <textarea id="cmpText" class="fi" rows="7" placeholder="Describe the problem clearly: what happened, when it happened and what you expect us to do." maxlength="30000"></textarea>
+            <div class="ctcount"><span id="cmpDraft"></span><b id="cmpCount">0 / 2000 words</b></div>
+          </div>
+          <div class="perr" id="cmpErr" role="alert" hidden></div>
+          <button class="gold ctsend" id="cmpSend" type="submit"><i data-ic="send"></i><span>Send complaint</span></button>
+          <p class="note ctfoot">Your name, Student ID, phone number, institute and Telegram username are sent with the complaint so the admin knows who wrote it.</p>
+        </form>
+      </section>
+
+      <section class="ctbar" id="barHist" aria-labelledby="hHist" hidden></section>
+      <section class="ctbar" id="barFaq" aria-labelledby="hFaq" hidden></section>
+    </div>
+  </div>
+
+  <p class="aur">POWERED BY ©Aurora</p>
+</main>
+
+<!-- complaint sent -->
+<div class="sheet" id="okSheet" hidden>
+  <div class="sbox ctok" role="dialog" aria-modal="true" aria-label="Complaint sent">
+    <span class="ctokic"><i data-ic="check"></i></span>
+    <h3>Complaint sent</h3>
+    <p class="note">The admin will read it and reply here. Keep this reference number if you contact us about it.</p>
+    <div class="ctref" id="okRef"></div>
+    <button class="gold wide" id="okClose">Done</button>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="backend.js"></script>
+<script src="config.js"></script>
+<script src="icons.js"></script>
+<script src="core.js"></script>
+<script src="staff.js"></script>
+<script src="shell.js"></script>
+<script src="contact.js"></script>
+<script src="pwa.js"></script>
+</body>
+</html>

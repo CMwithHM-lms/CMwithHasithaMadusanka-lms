@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mark Analyze | COMBINED MATHS with Hasitha Madusanka</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="home.css">
+<link rel="stylesheet" href="scene.css">
+<link rel="stylesheet" href="analyze.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#c8963a">
+</head>
+<body data-page="analyze">
+<main class="awrap">
+
+  <header class="ahero">
+    <span class="sym s1">∑</span><span class="sym s2">π</span><span class="sym s3">∫</span><span class="sym s4">√</span><span class="sym s5">Δ</span>
+    <h1 class="atitle" id="atitle" aria-label="Mark Analyze"></h1>
+    <p class="asub">Your marks, island rank and Z-score. Updated automatically.</p>
+    <div class="akpi" id="akpi"></div>
+  </header>
+
+  <!-- 1. marks -->
+  <section class="c glass ab" style="--acc:linear-gradient(90deg,#7c3aed,#3b82f6)">
+    <div class="rowh"><h3><i data-ic="analyze"></i>Paper marks</h3><span class="hint">Swipe left for older papers</span></div>
+    <div class="mscroll" id="marks"></div>
+  </section>
+
+  <!-- 2. ranks -->
+  <section class="c glass ab" style="--acc:linear-gradient(90deg,#f5d27a,#c8963a)">
+    <div class="rowh"><h3><i data-ic="achieve"></i>All-island rank</h3>
+      <label class="tg"><span>All papers</span><input type="checkbox" id="rkAll"><i></i></label></div>
+    <p class="note" id="rkNote"></p>
+    <div id="ranks"></div>
+  </section>
+
+  <!-- 3. z-score -->
+  <section class="c glass ab" style="--acc:linear-gradient(90deg,#14b8a6,#10b981)">
+    <div class="rowh"><h3><i data-ic="spark"></i>Z-score</h3></div>
+    <div class="chips" id="zChips"></div>
+    <div id="zView"></div>
+    <details class="how"><summary>How is Z-score calculated?</summary>
+      <p>Z = (your mark − class average) ÷ standard deviation. This is the same formula used for the A/L Z-score in Sri Lanka. Z = 0 means exactly average. Z = +1 means one standard deviation above the average. Your Z-score is calculated against every registered student of your A/L year who has a mark for that paper.</p></details>
+  </section>
+
+  <!-- 4. progress chart -->
+  <section class="c glass ab" style="--acc:linear-gradient(90deg,#f43f5e,#f59e0b)">
+    <div class="rowh"><h3><i data-ic="analyze"></i>Progress</h3>
+      <label class="tg"><span>Class average</span><input type="checkbox" id="chAvg" checked><i></i></label></div>
+    <div class="chips" id="chSer"></div>
+    <div class="cwrap"><div id="yax"></div><div class="cs" id="cwrap"><div id="lineBox"></div><div class="atip" id="ltip" hidden></div></div></div>
+    <div class="ins" id="insights"></div>
+  </section>
+
+  <p class="aur">POWERED BY ©Aurora</p>
+</main>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="backend.js"></script>
+<script src="config.js"></script>
+<script src="icons.js"></script>
+<script src="core.js"></script>
+<script src="staff.js"></script>
+<script src="shell.js"></script>
+<script src="analyze.js"></script>
+<script src="pwa.js"></script>
+</body>
+</html>

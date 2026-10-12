@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reset Password | COMBINED MATHS with Hasitha Madusanka</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="register.css">
+<link rel="stylesheet" href="reset.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#c8963a">
+</head>
+<body>
+<main class="card wide" id="card">
+  <svg class="duck big" viewBox="0 0 200 170" aria-hidden="true">
+    <g class="all">
+      <ellipse cx="100" cy="118" rx="46" ry="34" fill="#ffd84a"/>
+      <ellipse cx="64" cy="126" rx="10" ry="15" fill="#f5b81c" style="transform:rotate(14deg);transform-origin:50% 50%"/>
+      <g class="key">
+        <circle cx="146" cy="104" r="11" fill="none" stroke="#f2c46d" stroke-width="5"/>
+        <path d="M146 115V152M146 136h10M146 146h8" stroke="#f2c46d" stroke-width="5" stroke-linecap="round" fill="none"/>
+        <ellipse cx="136" cy="120" rx="12" ry="8" fill="#f5b81c" style="transform:rotate(-50deg);transform-origin:50% 50%"/>
+      </g>
+      <path class="spark" d="M172 84l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#fff6df"/>
+      <path class="spark s2" d="M44 96l1.5 4 4 1.5-4 1.5-1.5 4-1.5-4-4-1.5 4-1.5z" fill="#fff6df"/>
+      <g class="look">
+        <circle cx="100" cy="62" r="28" fill="#ffe066"/>
+        <circle cx="86" cy="70" r="5" fill="#ff9aa8" opacity=".5"/>
+        <ellipse class="eye" cx="111" cy="58" rx="3.6" ry="4" fill="#1a1230"/><circle cx="112.3" cy="56.6" r="1.2" fill="#fff"/>
+        <path d="M122 64q16 0 18 6q-8 8-22 3z" fill="#ff8a1f"/>
+        <path d="M80 30v12q20 10 40 0V30z" fill="#17102f"/>
+        <path d="M56 28L100 12L144 28L100 44Z" fill="#2a1d5c" stroke="#f2c46d" stroke-width="1.6" stroke-linejoin="round"/>
+        <circle cx="100" cy="28" r="2.8" fill="#f2c46d"/>
+        <path d="M100 28L138 30" stroke="#f2c46d" stroke-width="1.6" fill="none"/>
+        <g class="tassel"><path d="M138 30V48" stroke="#f2c46d" stroke-width="1.8"/><rect x="135" y="47" width="6" height="9" rx="2" fill="#f2c46d"/></g>
+      </g>
+    </g>
+  </svg>
+
+  <h1 class="sm" id="wel" aria-label="Reset Password"><span id="typed"></span><span class="cur"></span></h1>
+  <p class="sub">COMBINED MATHS with Hasitha Madusanka</p>
+
+  <div class="steps"><span class="on" id="s1"><b>1</b>Verify</span><i></i><span id="s2"><b>2</b>New password</span></div>
+
+  <form id="f1" novalidate>
+    <p class="hint">ලියාපදිංචි වෙද්දී දුන්න තොරතුරු දෙන්න | Enter the details you registered with</p>
+    <div class="f" data-f="phone"><label for="phone">දුරකථන අංකය <small>Phone Number</small></label>
+      <div class="in"><input id="phone" type="tel" inputmode="numeric" autocomplete="username" placeholder="07XXXXXXXX" maxlength="10"></div></div>
+    <div class="f" data-f="email"><label for="email">විද්‍යුත් තැපෑල <small>Email</small></label>
+      <div class="in"><input id="email" type="email" autocomplete="email" placeholder="name@example.com"></div></div>
+    <div class="f" data-f="wa"><label for="wa">WhatsApp අංකය <small>Number</small></label>
+      <div class="in"><input id="wa" type="tel" inputmode="numeric" placeholder="07XXXXXXXX" maxlength="10"></div></div>
+    <div class="err" id="err1" role="alert"></div>
+    <button class="btn" type="submit">Verify | තහවුරු කරන්න</button>
+  </form>
+
+  <form id="f2" novalidate hidden>
+    <p class="hint">අලුත් මුරපදයක් සාදන්න | Create your new password</p>
+    <div class="f" data-f="pass"><label for="pass">අලුත් මුරපදය <small>New Password</small></label>
+      <div class="in"><input id="pass" type="password" autocomplete="new-password" placeholder="••••••••"><button type="button" class="eye-btn" id="eye" aria-label="Show or hide password">Show</button></div>
+      <div class="meter" id="meter" data-lv="0"><i></i><i></i><i></i><i></i><i></i></div>
+      <ul class="rules" id="rules">
+        <li data-r="len"><b></b>8+ Characters</li>
+        <li data-r="up"><b></b>Uppercase letter</li>
+        <li data-r="low"><b></b>Lowercase letter</li>
+        <li data-r="num"><b></b>Numeric digit</li>
+        <li data-r="sym"><b></b>Special symbol</li>
+      </ul>
+      <div class="secure" id="secure"><span class="tick"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Password verified</div></div>
+    <div class="f" data-f="cpass"><label for="cpass">මුරපදය නැවත <small>Confirm Password</small></label>
+      <div class="in"><input id="cpass" type="password" autocomplete="new-password" placeholder="••••••••"></div>
+      <div class="match" id="match"></div></div>
+    <div class="err" id="err2" role="alert"></div>
+    <button class="btn" id="go" type="submit">Reset Password | මුරපදය වෙනස් කරන්න</button>
+  </form>
+
+  <p class="row">Remember your password? <a href="index.html">Log in</a></p>
+  <p class="pw">POWERED BY ©Aurora</p>
+</main>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="backend.js"></script>
+<script src="reset.js"></script>
+<script src="pwa.js"></script>
+</body>
+</html>

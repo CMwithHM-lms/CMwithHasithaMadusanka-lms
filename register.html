@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Register | COMBINED MATHS with Hasitha Madusanka</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="register.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#c8963a">
+</head>
+<body>
+<main class="card wide reg" id="card">
+  <svg class="duck big" viewBox="0 0 200 170" aria-hidden="true">
+    <g class="all">
+      <ellipse cx="100" cy="118" rx="46" ry="34" fill="#ffd84a"/>
+      <ellipse cx="62" cy="128" rx="10" ry="15" fill="#f5b81c" style="transform:rotate(14deg);transform-origin:50% 50%"/>
+      <path d="M54 132L100 140L146 132L150 158L100 164L50 158Z" fill="#c8963a"/>
+      <path d="M58 130L100 136V160L56 154Z" fill="#fff6df"/>
+      <path d="M100 136L142 130L144 154L100 160Z" fill="#fff6df"/>
+      <path d="M66 138L92 142M66 144L92 148M66 150L90 153" stroke="#d9c9a4" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <path class="ink" d="M107 146q6-6 10 0t10 0t10-1" stroke="#3a2a7a" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <g class="pen">
+        <line x1="108" y1="144" x2="130" y2="106" stroke="#f2c46d" stroke-width="5" stroke-linecap="round"/>
+        <line x1="106" y1="147" x2="109" y2="142" stroke="#1a1230" stroke-width="4" stroke-linecap="round"/>
+        <ellipse cx="128" cy="110" rx="12" ry="8" fill="#f5b81c" style="transform:rotate(-55deg);transform-origin:50% 50%"/>
+      </g>
+      <g class="look">
+        <circle cx="100" cy="62" r="28" fill="#ffe066"/>
+        <circle cx="86" cy="70" r="5" fill="#ff9aa8" opacity=".5"/>
+        <ellipse class="eye" cx="111" cy="58" rx="3.6" ry="4" fill="#1a1230"/><circle cx="112.3" cy="56.6" r="1.2" fill="#fff"/>
+        <path d="M122 64q16 0 18 6q-8 8-22 3z" fill="#ff8a1f"/>
+        <path d="M80 30v12q20 10 40 0V30z" fill="#17102f"/>
+        <path d="M56 28L100 12L144 28L100 44Z" fill="#2a1d5c" stroke="#f2c46d" stroke-width="1.6" stroke-linejoin="round"/>
+        <circle cx="100" cy="28" r="2.8" fill="#f2c46d"/>
+        <path d="M100 28L138 30" stroke="#f2c46d" stroke-width="1.6" fill="none"/>
+        <g class="tassel"><path d="M138 30V48" stroke="#f2c46d" stroke-width="1.8"/><rect x="135" y="47" width="6" height="9" rx="2" fill="#f2c46d"/></g>
+      </g>
+    </g>
+  </svg>
+
+  <h1 id="wel" aria-label="WELCOME"><span id="typed"></span><span class="cur"></span></h1>
+  <p class="sub">COMBINED MATHS with Hasitha Madusanka</p>
+
+  <form id="form" novalidate>
+    <div class="f" data-f="name"><label for="name">නම <small>Full Name</small></label>
+      <div class="in"><input id="name" type="text" autocomplete="name" placeholder="example: Nimshani Minulya"></div></div>
+
+    <div class="f" data-f="school"><label for="school">පාසල <small>School</small></label>
+      <div class="in"><input id="school" type="text" placeholder="Your school name"></div></div>
+
+    <div class="f" data-f="phone"><label for="phone">දුරකථන අංකය <small>Phone Number (Login)</small></label>
+      <div class="in"><input id="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="07XXXXXXXX" maxlength="10"></div></div>
+
+    <div class="f" data-f="email"><label for="email">විද්‍යුත් තැපෑල <small>Email</small></label>
+      <div class="in"><input id="email" type="email" autocomplete="email" placeholder="name@example.com"></div></div>
+
+    <div class="f" data-f="address"><label for="address">ලිපිනය <small>Address</small></label>
+      <div class="in"><textarea id="address" rows="2" maxlength="200" autocomplete="street-address" placeholder="House No, Street, Town"></textarea></div></div>
+
+    <div class="f" data-f="district"><label for="district">දිස්ත්‍රික්කය <small>District</small></label>
+      <div class="in"><select id="district" required><option value="" selected disabled>Select district</option></select></div></div>
+
+    <div class="f" data-f="town"><label for="town">නගරය <small>Town</small></label>
+      <div class="in"><input id="town" type="text" autocomplete="address-level2" placeholder="Your town"></div></div>
+
+    <div class="f" data-f="year"><label for="year">උසස් පෙළ වර්ෂය <small>A/L Year</small></label>
+      <div class="in"><select id="year" required><option value="" selected disabled>Select year</option>
+        <option>2026</option><option>2027</option><option>2028</option><option>2029</option></select></div></div>
+
+    <div class="f" data-f="attempt"><label for="attempt">උත්සාහය <small>Attempt</small></label>
+      <div class="in"><select id="attempt" required><option value="" selected disabled>Select attempt</option><option>1st Shy</option><option>2nd Shy</option><option>3rd Shy</option></select></div></div>
+
+    <div class="f" data-f="inst"><label for="inst">ආයතනය <small>Institute</small></label>
+      <div class="in"><select id="inst" required><option value="" selected disabled>Select institute</option>
+        <option>පැනෝලා - මතුගම</option><option>විදුල - හොරණ</option><option>සක්යා - පානදුර</option><option>රසන්යා - කලුතර</option><option>ONLINE</option></select></div></div>
+
+    <div class="f" data-f="wa">
+      <div class="lbl"><label for="wa">WhatsApp අංකය <small>Number</small></label><button type="button" class="link-btn" id="same">දුරකථන අංකයමයි | Same</button></div>
+      <div class="in"><input id="wa" type="tel" inputmode="numeric" placeholder="07XXXXXXXX" maxlength="10"></div></div>
+
+    <div class="f" data-f="pass"><label for="pass">මුරපදය <small>Password</small></label>
+      <div class="in"><input id="pass" type="password" autocomplete="new-password" placeholder="••••••••"><button type="button" class="eye-btn" id="eye" aria-label="Show or hide password">Show</button></div>
+      <div class="meter" id="meter" data-lv="0"><i></i><i></i><i></i><i></i><i></i></div>
+      <ul class="rules" id="rules">
+        <li data-r="len"><b></b>8+ Characters</li>
+        <li data-r="up"><b></b>Uppercase letter</li>
+        <li data-r="low"><b></b>Lowercase letter</li>
+        <li data-r="num"><b></b>Numeric digit</li>
+        <li data-r="sym"><b></b>Special symbol</li>
+      </ul>
+      <div class="secure" id="secure"><span class="tick"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Password verified</div></div>
+
+    <div class="err" id="err" role="alert"></div>
+    <button class="btn" id="go" type="submit">Register / ලියාපදිංචි වන්න</button>
+  </form>
+
+  <p class="row">Already Account? <a href="index.html">Log in</a></p>
+  <p class="pw">POWERED BY ©Aurora</p>
+</main>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="backend.js"></script>
+<script src="register.js"></script>
+<script src="pwa.js"></script>
+</body>
+</html>

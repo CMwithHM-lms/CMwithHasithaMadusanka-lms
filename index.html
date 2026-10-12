@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Login | COMBINED MATHS with Hasitha Madusanka</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="card" id="card">
+  <svg class="duck writing" id="duck" viewBox="0 0 120 110" aria-hidden="true">
+    <g class="all">
+      <ellipse cx="46" cy="102" rx="11" ry="4" fill="#ff9a2e"/><ellipse cx="74" cy="102" rx="11" ry="4" fill="#ff9a2e"/>
+      <ellipse cx="60" cy="74" rx="35" ry="27" fill="#ffd84a"/>
+      <path class="wing" d="M32 70c4-14 24-14 30-2-6 14-24 18-30 2z" fill="#f5b81c"/>
+      <g class="head">
+        <circle cx="62" cy="38" r="24" fill="#ffe066"/>
+        <path d="M58 15c-2-7 5-9 7-4-4 0-5 2-7 4z" fill="#ffe066"/>
+        <circle cx="52" cy="46" r="5" fill="#ff9aa8" opacity=".45"/>
+        <ellipse class="eye" cx="70" cy="34" rx="3.4" ry="3.8" fill="#1a1230"/><circle cx="71.2" cy="32.8" r="1.1" fill="#fff"/>
+        <path d="M82 38c13 0 16 5 15 8-6 5-15 4-19 1z" fill="#ff8a1f"/>
+      </g>
+    </g>
+  </svg>
+  <h1 id="wel" aria-label="Welcome"><span id="typed"></span><span class="cur"></span></h1>
+  <p class="sub">COMBINED MATHS with Hasitha Madusanka</p>
+
+  <form id="form" novalidate>
+    <div class="f"><label for="phone">දුරකථන අංකය</label>
+      <div class="in"><input id="phone" type="tel" inputmode="numeric" autocomplete="username" placeholder="07XXXXXXXX" maxlength="12"></div></div>
+    <div class="f"><label for="pass">මුරපදය</label>
+      <div class="in"><input id="pass" type="password" autocomplete="current-password" placeholder="••••••••"><button type="button" class="eye-btn" id="eye">Show</button></div></div>
+    <div class="err" id="err" role="alert"></div>
+    <button class="btn" id="go" type="submit">Login</button>
+  </form>
+
+  <p class="row">ගිණුමක් නැද්ද? <a href="register.html">Register වෙන්න</a><br>
+  Forgot Password? <a href="reset.html">Reset password</a></p>
+  <p class="pw">POWERED BY ©Aurora</p>
+</main>
+
+<script src="script.js"></script>
+</body>

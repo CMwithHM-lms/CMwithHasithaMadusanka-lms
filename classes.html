@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>My Classes | COMBINED MATHS with Hasitha Madusanka</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="home.css">
+<link rel="stylesheet" href="scene.css">
+<link rel="stylesheet" href="store.css">
+<link rel="stylesheet" href="classes.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#c8963a">
+</head>
+<body data-page="classes">
+<main class="kwrap">
+
+  <!-- animated title -->
+  <header class="khero">
+    <span class="korb o1"></span><span class="korb o2"></span><span class="korb o3"></span>
+    <div class="ktop">
+      <svg class="kart" viewBox="0 0 120 120" aria-hidden="true">
+        <defs>
+          <linearGradient id="kb1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a78bfa"/><stop offset="1" stop-color="#6d28d9"/></linearGradient>
+          <linearGradient id="kb2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5eead4"/><stop offset="1" stop-color="#0d9488"/></linearGradient>
+          <linearGradient id="kb3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3c4"/><stop offset=".55" stop-color="#f2c46d"/><stop offset="1" stop-color="#c8963a"/></linearGradient>
+          <linearGradient id="kcap" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b2a86"/><stop offset="1" stop-color="#1d1238"/></linearGradient>
+        </defs>
+        <ellipse cx="60" cy="108" rx="40" ry="5" fill="#000" opacity=".25"/>
+        <g class="kbooks">
+          <g class="kbk k1"><rect x="22" y="80" width="76" height="18" rx="5" fill="url(#kb1)"/><rect x="28" y="85" width="64" height="2.6" rx="1.3" fill="#fff" opacity=".35"/><rect x="28" y="90" width="40" height="2.6" rx="1.3" fill="#fff" opacity=".22"/></g>
+          <g class="kbk k2"><rect x="30" y="62" width="64" height="17" rx="5" fill="url(#kb2)"/><rect x="36" y="67" width="52" height="2.6" rx="1.3" fill="#fff" opacity=".35"/></g>
+          <g class="kbk k3"><rect x="26" y="45" width="68" height="16" rx="5" fill="url(#kb3)"/><rect x="32" y="50" width="30" height="2.6" rx="1.3" fill="#fff" opacity=".55"/></g>
+        </g>
+        <g class="kcapg">
+          <path d="M42 28v12q18 9 36 0V28z" fill="#17102f"/>
+          <path d="M18 24 60 8l42 16-42 16z" fill="url(#kcap)" stroke="#f2c46d" stroke-width="1.6" stroke-linejoin="round"/>
+          <circle cx="60" cy="24" r="2.6" fill="#f2c46d"/>
+          <path d="M60 24l36 3" stroke="#f2c46d" stroke-width="1.6" fill="none"/>
+          <g class="ktas"><path d="M96 27v16" stroke="#f2c46d" stroke-width="1.8"/><rect x="93" y="42" width="6" height="9" rx="2" fill="#f2c46d"/></g>
+        </g>
+        <path class="ksp s1" d="M104 62l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#f2c46d"/>
+        <path class="ksp s2" d="M12 58l1.6 4 4 1.6-4 1.6-1.6 4-1.6-4-4-1.6 4-1.6z" fill="#5eead4"/>
+        <path class="ksp s3" d="M100 96l1.4 3.4 3.4 1.4-3.4 1.4-1.4 3.4-1.4-3.4-3.4-1.4 3.4-1.4z" fill="#fff"/>
+      </svg>
+      <div class="ktx">
+        <h1 class="ktitle" id="ktitle" aria-label="My Classes">My Classes</h1>
+        <p class="ksub">Your classes, live sessions and recordings, all in one place.</p>
+      </div>
+    </div>
+    <div class="kstats" id="kstats"></div>
+  </header>
+
+  <div class="kmon" id="kmon" hidden></div>
+
+  <section id="kview" aria-live="polite"></section>
+
+  <p class="aur">POWERED BY ©Aurora</p>
+</main>
+
+<!-- class sheet -->
+<div class="sh ksh" id="sh" hidden>
+  <div class="shb" role="dialog" aria-modal="true" aria-label="Class details">
+    <div class="shh">
+      <div class="shT"><b id="shTitle"></b><small id="shSub"></small></div>
+      <span id="shTag"></span>
+      <button class="xbtn" id="shX" aria-label="Close"><i data-ic="cross"></i></button>
+    </div>
+    <div class="car kcar" id="car"></div>
+    <p class="aur in">POWERED BY ©Aurora</p>
+  </div>
+</div>
+
+<!-- recording player -->
+<div class="kp" id="kp" hidden>
+  <div class="kpb" role="dialog" aria-modal="true" aria-label="Recording player">
+    <div class="kpv"><div class="kpf" id="kpf"></div></div>
+    <div class="kpi">
+      <div class="kpt"><b id="kpTitle"></b><small id="kpSub"></small></div>
+      <a class="kpo" id="kpOpen" target="_blank" rel="noopener noreferrer"><i data-ic="ext"></i>YouTube</a>
+      <button class="xbtn" id="kpX" aria-label="Close player"><i data-ic="cross"></i></button>
+    </div>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="backend.js"></script>
+<script src="config.js"></script>
+<script src="icons.js"></script>
+<script src="core.js"></script>
+<script src="staff.js"></script>
+<script src="shell.js"></script>
+<script src="classes.js"></script>
+<script src="pwa.js"></script>
+</body>
+</html>

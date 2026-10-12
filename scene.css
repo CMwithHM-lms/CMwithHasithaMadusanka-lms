@@ -1,0 +1,72 @@
+h3{margin:0;font-size:.98rem;letter-spacing:.02em;display:flex;align-items:center;gap:8px}
+h3 .ico svg{width:18px;height:18px;color:var(--gold)}
+.c{position:relative;overflow:hidden;border-radius:24px;padding:18px;margin-bottom:14px}
+.c::before{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--acc,linear-gradient(90deg,#f5d27a,#c8963a))}
+.rowh{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.empty{color:var(--mute);font-size:.85rem;text-align:center;margin:14px 0}
+.note{margin:0 0 10px;font-size:.72rem;color:var(--mute);line-height:1.5}
+.link{background:none;border:0;color:var(--c3);font:700 .78rem var(--font);cursor:pointer;padding:4px}
+@keyframes fadeup{from{opacity:0;transform:translateY(8px)}}
+@keyframes tileIn{from{opacity:0;transform:translateY(8px) scale(.94)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes grow{from{transform:scaleY(0)}}
+
+/* greeting scene */
+.hello{height:158px;padding:0;color:#fff;border:0;box-shadow:0 20px 36px -22px rgba(22,17,43,.7)}
+.hello::before{display:none}
+.scene,.shade{position:absolute;inset:0}
+.scene svg{width:100%;height:100%}
+.shade{background:linear-gradient(90deg,rgba(6,10,35,.55),rgba(6,10,35,.12) 62%,transparent)}
+.htxt{position:relative;z-index:1;padding:20px 20px 0;text-shadow:0 2px 14px rgba(0,0,0,.4)}
+.htxt small{display:block;font-size:.68rem;letter-spacing:.16em;text-transform:uppercase;opacity:.92;animation:fadeup .7s both}
+.htxt h2{margin:10px 0 0;font:500 1.12rem/1.25 var(--font);animation:fadeup .7s .12s both}
+.htxt h2 b{display:block;font-size:1.7rem;font-weight:800}
+.cl{animation:drift 90s linear infinite}
+@keyframes drift{from{transform:translateX(-100px)}to{transform:translateX(500px)}}
+.fly{animation:fly 28s linear infinite}
+@keyframes fly{from{transform:translate(-30px,0)}50%{transform:translate(190px,-9px)}to{transform:translate(430px,3px)}}
+.flap{transform-box:fill-box;transform-origin:50% 100%;animation:flap .45s ease-in-out infinite alternate}
+@keyframes flap{to{transform:scaleY(.25)}}
+.tw{animation:tw 2.6s ease-in-out infinite}
+@keyframes tw{0%,100%{opacity:.2}50%{opacity:1}}
+.glow,.halo,.dawn{transform-box:fill-box;transform-origin:center;animation:pulse 5s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.12);opacity:.8}}
+.rays{transform-box:fill-box;transform-origin:center;animation:spin 60s linear infinite}
+.sun{animation:rise 3s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise{from{transform:translateY(16px);opacity:0}}
+.sunset{animation:sink 20s ease-in-out infinite alternate}
+@keyframes sink{to{transform:translateY(7px)}}
+.shoot{animation:shoot 9s ease-in infinite;opacity:0}
+@keyframes shoot{0%{transform:translate(0,0);opacity:0}2%{opacity:1}9%{transform:translate(-120px,42px);opacity:0}100%{transform:translate(-120px,42px);opacity:0}}
+.ff{animation:ff 5s ease-in-out infinite}
+@keyframes ff{0%,100%{transform:translate(0,0);opacity:.15}25%{opacity:1}50%{transform:translate(var(--x,8px),var(--y,-8px));opacity:.3}75%{opacity:1}}
+
+/* student id card */
+.idc{--rx:0deg;--ry:0deg;position:relative;overflow:hidden;border-radius:20px;padding:18px 18px 16px;color:#fff;cursor:pointer;touch-action:pan-y;
+  background:radial-gradient(120% 90% at 100% 0%,rgba(139,92,246,.55),transparent 55%),radial-gradient(90% 80% at 0% 100%,rgba(232,194,122,.28),transparent 60%),linear-gradient(135deg,#0d0824,#1e1250 60%,#2c1b6b);
+  border:1px solid rgba(232,194,122,.4);box-shadow:0 24px 40px -22px rgba(30,18,80,.9),inset 0 1px 0 rgba(255,255,255,.14);
+  transform:perspective(800px) rotateX(var(--rx)) rotateY(var(--ry));transition:transform .25s ease}
+.idc::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.13) 50%,transparent 62%);transform:translateX(-100%);animation:shine 5s ease-in-out infinite;pointer-events:none}
+@keyframes shine{0%,45%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.idtop{display:flex;align-items:center;gap:10px}
+.idtop .ico svg{width:20px;height:20px;color:rgba(255,255,255,.7)}
+.chip3{position:relative;width:40px;height:30px;border-radius:7px;background:linear-gradient(135deg,#fff3c4,#e8c27a 50%,#b8862f);box-shadow:inset 0 0 0 1px rgba(0,0,0,.2)}
+.chip3::before{content:"";position:absolute;inset:6px 8px;border-radius:3px;border:1px solid rgba(60,36,0,.5);background:linear-gradient(90deg,transparent 45%,rgba(60,36,0,.35) 46% 54%,transparent 55%)}
+.idcap{margin-left:auto;font-size:.66rem;letter-spacing:.28em;font-weight:700;color:rgba(232,194,122,.95)}
+.idnum{margin:22px 0 20px;font:700 clamp(1.6rem,8.6vw,2.2rem)/1 ui-monospace,'SF Mono',Menlo,Consolas,monospace;letter-spacing:.14em;
+  background:linear-gradient(100deg,#fff6d8 0%,#f2c46d 30%,#fff3c4 50%,#d19a3e 70%,#f2c46d 100%);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:foil 5s linear infinite}
+@keyframes foil{from{background-position:100% 0}to{background-position:-120% 0}}
+.idbot{display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+.il,.in{display:flex;flex-direction:column;min-width:0}
+.idc small{font-size:.6rem;letter-spacing:.16em;color:rgba(255,255,255,.55);text-transform:uppercase}
+.idc b{font-size:.92rem;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.il .yr{margin-top:3px;color:rgba(232,194,122,.9)}
+.ir{display:flex;align-items:center;gap:16px;text-align:right}
+.badge{position:relative;isolation:isolate;display:grid;place-items:center;width:46px;height:46px;flex:none;border-radius:50%;box-shadow:0 10px 20px -10px var(--b)}
+.badge::before{content:"";position:absolute;inset:-3px;border-radius:50%;background:conic-gradient(var(--a),var(--b),var(--a));animation:spin 6s linear infinite;z-index:-1}
+.core{position:relative;width:100%;height:100%;border-radius:50%;background:#fff;display:grid;place-items:center;overflow:hidden}
+.core svg{width:22px;height:22px}
+.core::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.9) 50%,transparent 65%);transform:translateX(-100%);animation:shine 3.6s ease-in-out infinite}
+
+.idsec{margin-bottom:14px}
+@media (min-width:900px){.hello{height:200px}.htxt{padding:28px 30px 0}.htxt small{font-size:.74rem}.htxt h2{font-size:1.3rem}.htxt h2 b{font-size:2.4rem}}

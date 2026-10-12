@@ -1,0 +1,20 @@
+/* reset page extras (loads after style.css and register.css) */
+.card.wide h1.sm{font-size:clamp(1.6rem,7.6vw,2.2rem);letter-spacing:0}
+.key{transform-origin:50% 0;animation:sway 2.8s ease-in-out infinite}
+@keyframes sway{0%,100%{transform:rotate(5deg)}50%{transform:rotate(-6deg)}}
+.spark{transform-origin:50% 50%;animation:tw 1.9s ease-in-out infinite}
+.spark.s2{animation-delay:.9s}
+@keyframes tw{0%,100%{opacity:0;transform:scale(.4)}50%{opacity:1;transform:scale(1)}}
+
+.steps{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:20px;font-size:.78rem;color:var(--mute)}
+.steps span{display:flex;align-items:center;gap:7px;transition:color .3s}
+.steps b{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:.72rem;border:1.5px solid #5a5272;transition:all .3s}
+.steps i{width:34px;height:2px;border-radius:2px;background:rgba(255,255,255,.14)}
+.steps .on{color:var(--text)}
+.steps .on b{border-color:var(--gold);color:var(--gold)}
+.steps .done{color:var(--ok)}
+.steps .done b{background:var(--ok);border-color:var(--ok);color:#04251a}
+.hint{margin:18px 0 16px;font-size:.8rem;color:var(--mute);text-align:center;line-height:1.7}
+form.show{animation:rise .45s}
+.match{margin:8px 4px 0;min-height:1.1em;font-size:.78rem;color:var(--err)}
+.match.ok{color:var(--ok)}

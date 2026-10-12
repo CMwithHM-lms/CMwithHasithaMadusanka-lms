@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Achievements &amp; Goals | COMBINED MATHS with Hasitha Madusanka</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="home.css">
+<link rel="stylesheet" href="scene.css">
+<link rel="stylesheet" href="achievements.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#c8963a">
+</head>
+<body data-page="achievements">
+<main class="gwrap">
+
+  <!-- hero -->
+  <header class="ghero">
+    <span class="gsym g1">★</span><span class="gsym g2">✦</span><span class="gsym g3">∑</span><span class="gsym g4">✧</span><span class="gsym g5">π</span>
+    <h1 class="gtitle" id="gtitle" aria-label="Achievements and Goals">Achievements &amp; Goals</h1>
+    <p class="gsub">Score <b id="gAt">80</b> or more to earn your blue tick. Climb to the island top 3.</p>
+    <div class="gkpi" id="gkpi"></div>
+  </header>
+
+  <div class="gcols">
+    <div class="gcol">
+
+      <!-- 1. my blue tick -->
+      <section class="c glass gmine" id="gmine" style="--acc:linear-gradient(90deg,#38bdf8,#2563eb)">
+        <div class="rowh"><h3><i data-ic="verified"></i>My blue tick</h3><span class="gchip" id="gState"></span></div>
+        <div class="gme">
+          <div class="gring" id="gring"><div class="gav" id="gav"></div><span class="gbadge" id="gbadge"></span></div>
+          <div class="gmt">
+            <b class="gname" id="gname"></b>
+            <small id="gline"></small>
+            <div class="gbar"><i id="gfill"></i><span class="gmk" id="gmk"></span></div>
+            <div class="gscale"><span>0</span><span id="gTarget">80</span></div>
+          </div>
+        </div>
+        <details class="how"><summary>How does the blue tick work?</summary>
+          <p>Score <b class="gat">80</b> or more (the average of Pure and Applied) in any paper and a blue tick appears next to your name, on every page, for every student to see. Your teacher can also give or remove a tick by hand.</p></details>
+      </section>
+
+      <!-- 3. goals -->
+      <section class="c glass ggoals" id="ggoals" style="--acc:linear-gradient(90deg,#14b8a6,#10b981)">
+        <div class="rowh"><h3><i data-ic="target"></i>My goals</h3><span class="gchip soft" id="gDone"></span></div>
+        <div id="goals"></div>
+      </section>
+    </div>
+
+    <div class="gcol">
+
+      <!-- 2. island top 3 -->
+      <section class="c glass gtop" id="gtop" style="--acc:linear-gradient(90deg,#f5d27a,#c8963a)">
+        <div class="rowh"><h3><i data-ic="crown"></i>All-island Top 3</h3><span class="gchip" id="gMode"></span></div>
+        <div class="gch" id="gYears"></div>
+        <div class="gch" id="gPapers"></div>
+        <div class="gpod" id="gpod"></div>
+        <p class="note gfoot" id="gTopNote"></p>
+      </section>
+
+      <!-- 4. verified students -->
+      <section class="c glass gver" id="gver" style="--acc:linear-gradient(90deg,#38bdf8,#7c3aed)">
+        <div class="rowh"><h3><i data-ic="users"></i>Verified students</h3><span class="gchip" id="gCount"></span></div>
+        <div class="gtools">
+          <label class="gsearch"><i data-ic="search"></i><input id="gq" type="search" placeholder="Search a name" autocomplete="off" aria-label="Search verified students"></label>
+          <label class="tg"><span>My A/L year</span><input type="checkbox" id="gYr"><i></i></label>
+        </div>
+        <div id="gvlist"></div>
+        <button class="gmore" id="gmore" hidden>Show more</button>
+      </section>
+    </div>
+  </div>
+
+  <p class="aur">POWERED BY ©Aurora</p>
+</main>
+
+<canvas id="gfx" aria-hidden="true"></canvas>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="backend.js"></script>
+<script src="config.js"></script>
+<script src="icons.js"></script>
+<script src="core.js"></script>
+<script src="staff.js"></script>
+<script src="shell.js"></script>
+<script src="achievements.js"></script>
+<script src="pwa.js"></script>
+</body>
+</html>

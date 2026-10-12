@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Home | COMBINED MATHS with Hasitha Madusanka</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="home.css">
+<link rel="stylesheet" href="scene.css">
+<link rel="stylesheet" href="cards.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#c8963a">
+</head>
+<body data-page="home">
+<main class="wrap">
+<div class="col">
+<section class="c hello" id="hello">
+    <div class="scene" id="scene"></div><div class="shade"></div>
+    <div class="htxt"><small id="when"></small><h2><span id="greet"></span><b id="gname"></b></h2></div>
+  </section>
+
+<section class="c glass chart" style="--acc:linear-gradient(90deg,#7c3aed,#3b82f6)">
+    <div class="rowh"><h3><i data-ic="analyze"></i>Paper Mark Analyze</h3></div>
+    <div class="stats">
+      <div class="stt"><b data-n="n">0</b><small>Papers</small></div>
+      <div class="stt"><b data-n="avg">0</b><small>Average</small></div>
+      <div class="stt"><b data-n="best">0</b><small>Best</small></div>
+    </div>
+    <div class="legend">
+      <span><i class="k1"></i>Pure</span><span><i class="k2"></i>Applied</span><span><i class="k3"></i>Total</span>
+    </div>
+    <div class="cbox"><div id="chartSvg"></div><div class="tip" id="tip" hidden></div></div>
+    <p class="note">Marks out of 100. Total is the average of Pure and Applied. Tap a bar to see its mark.</p>
+  </section>
+
+<section class="c glass notices" style="--acc:linear-gradient(90deg,#f43f5e,#f59e0b)">
+    <div class="rowh"><h3><i data-ic="bell"></i>Notice</h3></div>
+    <div id="notices"></div>
+  </section>
+</div>
+<div class="col">
+<section class="idsec">
+    <div class="idc" id="idc">
+      <div class="idtop"><span class="chip3"></span><i data-ic="nfc"></i><span class="idcap">STUDENT ID</span></div>
+      <div class="idnum" id="sid"></div>
+      <div class="idbot">
+        <div class="il"><small>STUDENT</small><b id="idName"></b><small class="yr">A/L <span id="idYear"></span></small></div>
+        <div class="ir"><span id="badge"></span><span class="in"><small>INSTITUTE</small><b id="instName"></b></span></div>
+      </div>
+    </div>
+  </section>
+
+<section class="c glass tute" id="tute" data-state="locked" style="--acc:linear-gradient(90deg,#14b8a6,#10b981)">
+    <div class="rowh"><h3><i data-ic="truck"></i>Tute Tracking</h3><span class="chip" id="tuteChip"></span></div>
+    <div class="steps" id="steps">
+      <div class="st"><span class="dot"></span><small>Dispatched</small></div>
+      <div class="st"><span class="dot"></span><small>At courier hub</small></div>
+      <div class="st"><span class="dot"></span><small>Delivered</small></div>
+    </div>
+    <button class="ghost" id="cbtn" hidden>Courier Details</button>
+    <div class="cinfo" id="cinfo" hidden></div>
+  </section>
+
+<section class="c glass achs" style="--acc:linear-gradient(90deg,#f5d27a,#c8963a)">
+    <div class="rowh"><h3><i data-ic="achieve"></i>Achievements &amp; Goals</h3><button class="link" id="achMore">View all</button></div>
+    <p class="note" id="achCount"></p>
+    <div class="medals" id="ach"></div>
+  </section>
+</div>
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="backend.js"></script>
+<script src="config.js"></script>
+<script src="icons.js"></script>
+<script src="core.js"></script>
+<script src="staff.js"></script>
+<script src="shell.js"></script>
+<script src="scenes.js"></script>
+<script src="home.js"></script>
+<script src="chart.js"></script>
+<script src="panels.js"></script>
+<script src="pwa.js"></script>
+</body>
+</html>

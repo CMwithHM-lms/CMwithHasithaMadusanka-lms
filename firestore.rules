@@ -1,0 +1,67 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{db}/documents {
+    function me() { return request.auth != null; }
+    function mail() { return request.auth.token.email.lower(); }
+    function ver() { return me() && request.auth.token.email_verified == true; }
+    function isOwner() { return ver() && mail() == 'thiran.anujitha07@gmail.com'; }
+    function acc(r) { let p = /databases/$(db)/documents/staff/$(mail() + '__' + r); return exists(p) && get(p).data.status == 'accepted'; }
+    function isAdmin() { return isOwner() || (ver() && (acc('admin') || acc('owner'))); }
+    function isStaff() { return isAdmin() || (ver() && acc('analyze')); }
+    // a student may not change these once they exist
+    function same(f) { return !(f in resource.data) || request.resource.data.get(f, null) == resource.data[f]; }
+
+    // phone -> email lookup used by the Phone + Password login (get only, never list)
+    match /phones/{p} {
+      allow get: if true;
+      allow list: if isAdmin();
+      allow create: if me() && request.resource.data.keys().hasOnly(['email', 'uid']) && request.resource.data.uid == request.auth.uid;
+      allow update, delete: if isOwner();
+    }
+    match /profiles/{p} {
+      allow read: if me() && (resource.data.uid == request.auth.uid || isAdmin());
+      allow create: if me() && request.resource.data.uid == request.auth.uid;
+      allow update: if me() && ((resource.data.uid == request.auth.uid && request.resource.data.uid == resource.data.uid
+                                 && same('phone') && same('email') && same('year') && same('sid')) || isAdmin());
+      allow delete: if isOwner();
+    }
+    // students can create / edit their own order only as draft or pending. Only an admin can approve, reject or extend.
+    match /orders/{id} {
+      allow read: if me() && (resource.data._uid == request.auth.uid || isAdmin());
+      allow create: if me() && request.resource.data._uid == request.auth.uid && request.resource.data.status in ['draft', 'pending'];
+      allow update: if isAdmin() || (me() && resource.data._uid == request.auth.uid && request.resource.data._uid == resource.data._uid
+                                     && resource.data.status != 'approved' && request.resource.data.status in ['draft', 'pending']
+                                     && request.resource.data.get('extra', 0) == resource.data.get('extra', 0)
+                                     && request.resource.data.get('approved', null) == resource.data.get('approved', null));
+      allow delete: if isAdmin() || (me() && resource.data._uid == request.auth.uid && resource.data.status != 'approved');
+    }
+    match /complaints/{id} {
+      allow read: if me() && (resource.data._uid == request.auth.uid || isAdmin());
+      allow create: if me() && request.resource.data._uid == request.auth.uid && request.resource.data.get('status', '') != 'resolved';
+      allow update, delete: if isAdmin();
+    }
+    match /marks/{id} { allow read, write: if isStaff(); }
+    match /stats/{id} { allow read: if me(); allow write: if isStaff(); }
+    match /img/{id} {
+      allow create: if me() && request.resource.data._uid == request.auth.uid && request.resource.data.d is string && request.resource.data.d.size() < 400000;
+      allow read: if me() && (resource.data._uid == request.auth.uid || isOwner() || (resource.data.k != 'kyc' && isAdmin()));
+      allow delete: if isOwner();
+    }
+    // attendance: staff write it (with the student's uid), a student reads only their own
+    match /att/{id} { allow read: if me() && (resource.data.get('_uid', '') == request.auth.uid || isStaff()); allow write: if isAdmin(); }
+    match /emailreq/{id} { allow create: if isStaff(); allow read: if isAdmin(); allow delete: if isOwner(); }
+    match /staff/{id} {
+      allow read: if me() && (resource.data.email == mail() || isAdmin());
+      allow create, delete: if isOwner();
+      allow update: if isOwner() || (ver() && resource.data.email == mail() && resource.data.status == 'invited' && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'at']));
+    }
+    match /kyc/{id} {
+      allow create: if ver() && request.resource.data.email == mail();
+      allow read, update, delete: if isOwner();
+    }
+    match /kv/{k} {
+      allow read: if k in ['lms_site_cfg', 'lms_contact'] || (me() && k == 'lms_ach_admin') || isOwner();
+      allow write: if (k == 'lms_site_cfg' && isOwner()) || (k in ['lms_contact', 'lms_ach_admin'] && isAdmin()) || (k in ['lms_owner_email', 'lms_ctrl_pw', 'lms_kyc_pw'] && isOwner());
+    }
+  }
+}

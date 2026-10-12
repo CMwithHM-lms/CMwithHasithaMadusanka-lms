@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>My Profile | COMBINED MATHS with Hasitha Madusanka</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="home.css">
+<link rel="stylesheet" href="scene.css">
+<link rel="stylesheet" href="profile.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#c8963a">
+</head>
+<body data-page="profile">
+<main class="wrap">
+  <div class="col">
+    <section class="c glass phero">
+      <div class="banner"></div>
+      <div class="pring" id="pring">
+        <div class="pavatar" id="pav"></div>
+        <label class="pcam" for="photoIn" aria-label="Change photo"><i data-ic="camera"></i></label>
+      </div>
+      <input type="file" id="photoIn" accept="image/*" hidden>
+      <h2 id="pname"></h2>
+      <p class="psub" id="psub"></p>
+      <div class="pchips" id="pchips"></div>
+      <div class="pver" id="pver" hidden></div>
+      <p class="pcomp" id="pcomp"></p>
+      <button class="link" id="rmPhoto" hidden>Remove photo</button>
+    </section>
+
+    <section class="c glass pinfo" style="--acc:linear-gradient(90deg,#7c3aed,#3b82f6)">
+      <div class="rowh"><h3><i data-ic="profile"></i>Personal Details</h3>
+        <label class="sw"><span>Edit</span><input type="checkbox" id="sw"><i></i></label></div>
+      <div id="rows"></div>
+      <div class="perr" id="perr" hidden></div>
+      <div class="pact" id="pact" hidden><button class="gold" id="save">Save changes</button></div>
+      <p class="pfoot">(Institute වෙනස් කරගැනීමට Technical සහය ලබාගන්න)</p>
+      <button class="ghost wide" id="rqBtn"><i data-ic="chat"></i>Request a change</button>
+      <div id="rqList"></div>
+    </section>
+  </div>
+
+  <div class="col">
+    <section class="qrsec" id="qr">
+      <div class="qrcard">
+        <div class="rowh"><h3><i data-ic="qr"></i>My QR Code</h3><span class="qchip">UNIQUE TO YOU</span></div>
+        <div class="qrtile"><div id="qrbox"></div><span class="k1"></span><span class="k2"></span><span class="k3"></span><span class="k4"></span></div>
+        <div class="qid" id="qid"></div>
+        <div class="qrinfo" id="qrinfo"></div>
+        <button class="gold wide" id="qrSave"><i data-ic="arrow"></i>Save QR image</button>
+        <p class="qnote">Show this code to an admin when you arrive.</p>
+      </div>
+    </section>
+
+    <section class="c glass ptg" id="tg" style="--acc:linear-gradient(90deg,#37aee2,#1e96c8)" aria-labelledby="tgH">
+      <div class="rowh"><h3 id="tgH"><span class="tgl" id="tgLogo"></span>Telegram</h3><span class="tgst" id="tgSt"></span></div>
+      <div id="tgView"></div>
+    </section>
+
+    <section class="c glass psec" style="--acc:linear-gradient(90deg,#f43f5e,#f59e0b)">
+      <div class="rowh"><h3><i data-ic="lock"></i>Password</h3></div>
+      <p class="note">To change your password, log out and use Reset Password on the login page.</p>
+      <button class="ghost wide" id="pwReset"><i data-ic="out"></i>Log out and reset</button>
+    </section>
+  </div>
+</main>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="sbox" role="dialog" aria-label="Request a change">
+    <div class="rowh"><h3><i data-ic="chat"></i>Request a change</h3><button class="link" id="rqX">Close</button></div>
+    <p class="note">An admin will review your request. Locked details can only be changed this way.</p>
+    <div class="pf"><label for="rqField">Detail to change</label><select class="fi" id="rqField"></select></div>
+    <div class="pf"><label for="rqVal">New value</label><input class="fi" id="rqVal" type="text" maxlength="120"></div>
+    <div class="pf"><label for="rqWhy">Reason</label><textarea class="fi" id="rqWhy" rows="2" maxlength="200"></textarea></div>
+    <div class="perr" id="rqErr" hidden></div>
+    <button class="gold wide" id="rqGo">Send request</button>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="backend.js"></script>
+<script src="config.js"></script>
+<script src="icons.js"></script>
+<script src="core.js"></script>
+<script src="staff.js"></script>
+<script src="shell.js"></script>
+<script src="qr.js"></script>
+<script src="profile.js"></script>
+<script src="pwa.js"></script>
+</body>
+</html>

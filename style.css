@@ -1,0 +1,55 @@
+:root{
+  --ink:#08060f; --violet:#1d1238; --teal:#3ee0c5; --gold:#f2c46d; --gold2:#c8963a; --text:#f4efe6; --mute:#a79fba; --err:#ff7a8a;
+  --font:'Inter','Noto Sans Sinhala','Iskoola Pota','Nirmala UI',system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:var(--font);color:var(--text);background:radial-gradient(circle at 15% 0%,rgba(62,224,197,.28),transparent 45%),radial-gradient(circle at 90% 100%,rgba(123,77,255,.32),transparent 50%),var(--ink);display:flex;align-items:center;justify-content:center;
+  padding:max(20px,env(safe-area-inset-top)) 18px max(20px,env(safe-area-inset-bottom));position:relative;min-height:100vh}
+.card{position:relative;z-index:1;width:100%;max-width:400px;padding:26px 24px 22px;border-radius:28px;text-align:center;
+  background:linear-gradient(160deg,#241a42,#130d26);
+  border:1px solid rgba(242,196,109,.28);
+  box-shadow:0 30px 80px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.12)}
+/* duckling */
+.duck{width:112px;height:104px;margin:0 auto -4px;overflow:visible;}
+.duck *{transform-box:fill-box}
+.duck .all{animation:bob 2.4s ease-in-out infinite;transform-origin:50% 100%}
+@keyframes bob{50%{transform:translateY(-3px)}}
+.duck .head{transform-origin:45% 90%}
+.duck.writing .head{animation:peck .34s ease-in-out infinite}
+@keyframes peck{50%{transform:rotate(14deg) translateY(2px)}}
+.duck .wing{transform-origin:20% 30%;animation:flap 2.4s ease-in-out infinite}
+@keyframes flap{50%{transform:rotate(-12deg)}}
+.duck .eye{transform-origin:center;animation:blink 4s infinite}
+@keyframes blink{0%,94%,100%{transform:scaleY(1)}97%{transform:scaleY(.1)}}
+h1{font-family:var(--font);font-weight:800;font-size:clamp(2.7rem,14vw,3.6rem);line-height:1.1;letter-spacing:.01em;min-height:1.2em;
+  background:linear-gradient(100deg,#fff2cf,var(--gold) 45%,var(--gold2));-webkit-background-clip:text;background-clip:text;color:transparent}
+h1 .cur{display:inline-block;width:3px;height:.8em;margin-left:4px;vertical-align:-.05em;background:var(--teal);animation:cur .8s steps(1) infinite;-webkit-text-fill-color:initial}
+@keyframes cur{50%{opacity:0}}
+.sub{margin-top:6px;font-size:.78rem;letter-spacing:.06em;color:var(--mute);font-weight:500}
+form{margin-top:24px;text-align:left}
+.f{margin-bottom:14px}
+.f label{display:block;font-size:.76rem;color:var(--mute);margin:0 4px 6px}
+.in{position:relative}
+.in input{width:100%;padding:15px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.14);background:rgba(8,6,15,.55);color:var(--text);
+  font:500 1rem var(--font);outline:none;transition:border-color .2s,box-shadow .2s}
+.in input::placeholder{color:#6f6785}
+.in input:focus{border-color:var(--gold);box-shadow:0 0 0 4px rgba(242,196,109,.16)}
+.eye-btn{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:0;color:var(--mute);font:500 .74rem var(--font);padding:10px;cursor:pointer}
+.eye-btn:focus-visible,.btn:focus-visible,a:focus-visible{outline:2px solid var(--teal);outline-offset:3px}
+.err{display:none;margin:2px 4px 12px;padding:11px 14px;border-radius:12px;font-size:.84rem;color:var(--err);background:rgba(255,122,138,.1);border:1px solid rgba(255,122,138,.3)}
+.err.show{display:block}
+.shake{animation:shake .45s}
+@keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+.btn{width:100%;padding:15px;border:0;border-radius:14px;cursor:pointer;font:600 1rem var(--font);color:#2a1c05;margin-top:4px;
+  background:linear-gradient(100deg,#ffe5a3,var(--gold) 50%,var(--gold2));box-shadow:0 12px 30px rgba(242,196,109,.28);transition:transform .15s,box-shadow .15s}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.7}
+.row{margin-top:18px;font-size:.86rem;color:var(--mute);text-align:center;line-height:1.9}
+.row a{color:var(--teal);font-weight:600;text-decoration:none;margin-left:4px}
+.row a:hover{text-decoration:underline}
+.pw{margin-top:20px;font-size:.68rem;letter-spacing:.14em;color:rgba(244,239,230,.34);text-align:center}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* glass effect only where the browser supports it */
+@supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+.card{background:linear-gradient(160deg,rgba(255,255,255,.1),rgba(255,255,255,.03));-webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px)}}

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>QR Scanner | COMBINED MATHS Admin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="home.css">
+<link rel="stylesheet" href="scene.css">
+<link rel="stylesheet" href="scan.css">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#c8963a">
+</head>
+<body data-page="scan">
+<header class="top glass sctop">
+  <div class="brand"><div class="logo" id="logo">CM</div><div class="bt"><b>QR SCANNER</b><small>Admin tool</small></div></div>
+  <div class="tr"><button class="theme" id="theme" aria-label="Dark or light mode"></button></div>
+</header>
+
+<main class="scwrap">
+  <section class="scpanel glass">
+    <div class="scrow">
+      <button class="gold" id="scStart" type="button"><i data-ic="qr"></i><span>Scan QR code</span></button>
+      <form class="scman" id="scForm" novalidate>
+        <input class="fi" id="scId" type="text" inputmode="numeric" autocomplete="off" placeholder="or type Student ID" maxlength="40" aria-label="Student ID">
+        <button class="ghost" type="submit" aria-label="Look up"><i data-ic="search"></i></button>
+      </form>
+    </div>
+    <div class="scvid" id="scVid" hidden>
+      <video id="scVideo" playsinline muted></video>
+      <span class="scframe"></span>
+      <button class="xbtn" id="scStop" type="button" aria-label="Stop camera"><i data-ic="cross"></i></button>
+      <p id="scHint">Point the camera at the student's QR code</p>
+    </div>
+    <div class="perr" id="scErr" role="alert" hidden></div>
+  </section>
+
+  <section id="scRes" aria-live="polite"></section>
+
+  <p class="note scnote">Temporary scanner page. It moves into the Admin Panel (behind the admin login) when the backend is added.</p>
+  <p class="aur">POWERED BY ©Aurora</p>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="backend.js"></script>
+<script src="config.js"></script>
+<script src="icons.js"></script>
+<script src="core.js"></script>
+<script src="scan.js"></script>
+<script src="pwa.js"></script>
+</body>
+</html>
