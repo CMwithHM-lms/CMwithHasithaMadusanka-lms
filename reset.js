@@ -1,3 +1,4 @@
+const beMsg=()=>!window.LMS_BE?'backend.js is not loaded. Upload backend.js and the new index.html, register.html, reset.html to GitHub, then hard refresh.':LMS_BE.why==='sdk'?'Firebase could not load. Check the internet connection or turn off the ad blocker.':'firebase-config.js has no real keys yet.';
 const $=s=>document.querySelector(s);
 
 // duckling writes the title
@@ -47,7 +48,7 @@ $('#f1').addEventListener('submit',ev=>{
   const phone=$('#phone').value.replace(/\D/g,''),email=$('#email').value.trim().toLowerCase(),wa=$('#wa').value.replace(/\D/g,'');
   if(!/^0\d{9}$/.test(phone)) return fail(f,'phone','දුරකථන අංකය වැරදියි | Invalid phone number');
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return fail(f,'email','Email එක වැරදියි | Enter a valid email');
-  if(!window.LMS_BE||!LMS_BE.ready) return fail(f,'','Server is not connected yet.');
+  if(!window.LMS_BE||!LMS_BE.ready) return fail(f,'',beMsg());
   LMS_BE.reset(phone,email).then(()=>{const e=f.querySelector('.err');e.className='err good show';e.textContent='We sent a password reset link to '+email+'. Open it, set a new password, then log in.';$('#go').hidden=true;})
     .catch(()=>fail(f,'','ලබාදුන් තොරතුරු ගැලපෙන්නේ නෑ | The details do not match our records'));
 });

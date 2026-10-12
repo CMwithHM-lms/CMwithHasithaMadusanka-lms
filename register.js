@@ -1,3 +1,4 @@
+const beMsg=()=>!window.LMS_BE?'backend.js is not loaded. Upload backend.js and the new index.html, register.html, reset.html to GitHub, then hard refresh.':LMS_BE.why==='sdk'?'Firebase could not load. Check the internet connection or turn off the ad blocker.':'firebase-config.js has no real keys yet.';
 const $=s=>document.querySelector(s);
 
 // districts
@@ -60,7 +61,7 @@ $('#form').addEventListener('submit',async ev=>{
   if(!phoneRe.test(v.wa)) return fail('wa','WhatsApp අංකය වැරදියි. / Invalid WhatsApp number.');
   if(!passOk(v.pass)) return fail('pass','මුරපදයේ ඉහත සියලු කොන්දේසි තිබිය යුතුයි. / Password must meet all rules.');
 
-  if(!window.LMS_BE||!LMS_BE.ready) return fail('', 'Server is not connected yet. / Check firebase-config.js.');
+  if(!window.LMS_BE||!LMS_BE.ready) return fail('', beMsg());
   $('#go').disabled=true;
   try{ await LMS_BE.register(v.phone,v.email,v.pass,{name:v.name,school:v.school,phone:v.phone,email:v.email,address:v.address,district:v.district,year:v.year,attempt:v.attempt,town:v.town,institute:v.inst,whatsapp:v.wa,created:Date.now()}); }
   catch(x){ $('#go').disabled=false; const c=x&&x.code||''; if(c==='phone-taken') return fail('phone','මෙම අංකයෙන් දැනටමත් ලියාපදිංචි වී ඇත. / This number is already registered.'); if(c==='auth/email-already-in-use') return fail('email','This email is already used by another account.'); return fail('', 'ලියාපදිංචි විය නොහැක. / Could not register. '+c); }

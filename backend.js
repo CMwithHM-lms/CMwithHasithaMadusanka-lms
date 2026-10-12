@@ -2,7 +2,7 @@
    Login stays Phone + Password: phones/{phone} -> email, then Firebase Auth email+password. */
 (function () {
   const F = window.firebase, CFG = window.FIREBASE_CONFIG;
-  if (!F || !CFG || !CFG.apiKey || /^PASTE/.test(CFG.apiKey)) { window.LMS_BE = { ready: false }; console.warn('Firebase is not configured: running on this device only.'); return; }
+  if (!F || !CFG || !CFG.apiKey || /^PASTE/.test(CFG.apiKey)) { window.LMS_BE = { ready: false, why: F ? 'config' : 'sdk' }; console.warn('Firebase is not configured: running on this device only.'); return; }
   F.initializeApp(CFG); const auth = F.auth(), db = F.firestore();
   try { db.enablePersistence({ synchronizeTabs: true }).catch(() => {}); } catch (e) {}   // local cache: repeat visits cost far fewer reads
   const OWNER = 'thiran.anujitha07@gmail.com', lsRaw = Storage.prototype.setItem;
