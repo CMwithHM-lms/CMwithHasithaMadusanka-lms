@@ -91,8 +91,8 @@
 
     site() {
       if (!unlocked) { $('#view').innerHTML = lockBox(); bindLock(V.site); return; }
-      const KEYS = ['banks', 'brand', 'institutes', 'achievements', 'goals', 'tute', 'papers', 'verifyAt', 'weakBelow', 'demo', 'notifications'];
-      const labels = { banks: 'Bank accounts (shown to students who pay)', brand: 'Brand / logo', institutes: 'Institutes (register form)', achievements: 'Achievements', goals: 'Goals', tute: 'Tute tracking', papers: 'Sample papers', verifyAt: 'Blue tick score', weakBelow: 'Weak line', demo: 'Demo students (true / false)', notifications: 'Notification settings' };
+      const KEYS = ['banks', 'brand', 'institutes', 'achievements', 'goals', 'tute', 'verifyAt', 'weakBelow', 'notifications'];
+      const labels = { banks: 'Bank accounts (shown to students who pay)', brand: 'Brand / logo', institutes: 'Institutes (register form)', achievements: 'Achievements', goals: 'Goals', tute: 'Tute tracking', verifyAt: 'Blue tick score', weakBelow: 'Weak line', notifications: 'Notification settings' };
       $('#view').innerHTML = card('', lockOff()) + card('Site Editor', `<p class="hint">Classes, notices, Contact Us, Zoom and recordings are managed in the Admin Panel. Everything here changes the whole site for all students.</p><select id="sK" class="fi">${KEYS.map(k => `<option value="${k}">${esc(labels[k])}</option>`).join('')}</select><div id="sBody"></div>`);
       $('#lo').onclick = () => { unlocked = false; try { sessionStorage.removeItem('lms_full'); } catch (e) {} V.site(); };
       const draw = () => {

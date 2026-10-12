@@ -21,32 +21,17 @@ window.LMS_CONFIG = {
     // '26881376': { confirmed: true, stage: 2, courierId: 'KUR-2201', courier: 'Koswatte Courier', center: 'Horana', updated: '2026-10-09' }
   },
 
-  // Paper marks (100 න්). SAMPLE: මකලා ඔයාගේ දත්ත දාන්න
-  // date: 'YYYY-MM-DD'. Rank සහ Z-score ගණනය වෙන්නේ මේ වර්ෂයේ ඔක්කොම ළමයින්ගේ ලකුණුවලින් (පස්සේ Admin Panel එකෙන්)
-  papers: [
-    { no: '2027 Paper No 9',  pure: 48, applied: 55, date: '2026-08-10' },
-    { no: '2027 Paper No 10', pure: 52, applied: 61, date: '2026-08-31' },
-    { no: '2027 Paper No 11', pure: 60, applied: 58, date: '2026-09-14' },
-    { no: '2027 Paper No 12', pure: 66, applied: 74, date: '2026-09-28' },
-    { no: '2027 Paper No 13', pure: 72, applied: 84, date: '2026-10-09' }
-  ],
+  // Paper marks: සැබෑ ළමයින්ගේ ලකුණු Admin Panel > Students & marks එකෙන් විතරයි එන්නේ. මෙතන sample ලකුණු දාන්න එපා.
   verifyAt: 80,    // Paper එකක total (Pure+Applied)/2 මේකට සමාන හෝ වැඩි වුණොත් ළමයාගේ නමට BLUE TICK ස්වයංක්‍රීයව වැටෙනවා
   weakBelow: 40,   // total (Pure + Applied)/2 මේකට අඩු නම් දුර්වල මට්ටම
-  demo: true,      // true: රැන්ක්/Z පෙන්වීමට demo ළමයින් 60ක් (සැබෑ ළමයි ආවම false කරන්න)
+  // demo ළමයින් (බොරු ළමයි) සම්පූර්ණයෙන්ම අයින් කළා. Rank / Z-score / Top 3 ගණනය වෙන්නේ සැබෑ ළමයින්ගේ ලකුණුවලින් විතරයි
 
-  // Notices. SAMPLE
-  notices: [
-    { title: 'Next class schedule', date: '2026-10-12', link: 'https://example.com' }
-  ],
+  // Notices: Admin Panel > Notices එකෙන් පළ කරන ඒවා විතරයි Home එකේ පේන්නේ (sample notice නෑ)
+  notices: [],
 
   // Achievements: key = Student ID ('*' = හැමෝටම, SAMPLE)
   // type: gold | silver | bronze | violet | teal   icon: achieve | star | flame | bolt
-  achievements: {
-    '*': [
-      { title: 'Perfect 25', note: 'Full marks in a paper', date: '2026-09-14', type: 'gold', icon: 'achieve' },
-      { title: 'Top Improver', note: '+6 marks in a month', date: '2026-09-30', type: 'violet', icon: 'bolt' }
-    ]
-  },
+  achievements: {},   // key = Student ID ('*' = හැමෝටම). Blue tick සහ Island Top 3 medals ස්වයංක්‍රීයව එනවා. වෙනත් ඒවා Owner Panel > Site editor එකෙන්
 
   // GOALS (ළමයින්ට දෙන tasks): Achievements & Goals පිටුවේ progress bar එක්ක ස්වයංක්‍රීයව පෙන්නනවා
   // metric: 'best' (paper එකක උපරිම total >= target)   'improve' (කලින් paper එකට වඩා වැඩි)
@@ -159,7 +144,7 @@ window.LMS_CONFIG = {
 };
 
 /* Site overrides saved from the Control Panel (top-level keys replace the defaults above) */
-try{const o=JSON.parse(localStorage.getItem('lms_site_cfg')||'{}');Object.keys(o).forEach(k=>{window.LMS_CONFIG[k]=(k==='store'&&o[k]&&typeof o[k]==='object')?Object.assign({},window.LMS_CONFIG.store,o[k]):o[k];});}catch(e){}
+try{const o=JSON.parse(localStorage.getItem('lms_site_cfg')||'{}');Object.keys(o).forEach(k=>{if(k==='demo'||k==='papers')return;window.LMS_CONFIG[k]=(k==='store'&&o[k]&&typeof o[k]==='object')?Object.assign({},window.LMS_CONFIG.store,o[k]):o[k];});}catch(e){}
 /* Admin Panel data (live from Firebase): classes, notices, per-class Zoom + recordings */
 (function(){
   const g=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v;}catch(e){return d;}}, C=window.LMS_CONFIG;

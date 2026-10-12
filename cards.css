@@ -78,3 +78,23 @@
 .ncard .nbd{font-size:.76rem;line-height:1.45;color:var(--mute);overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
 .ncard small{margin-top:auto;font-size:.68rem;font-weight:600;color:var(--gold)}
 .nhint{margin:0;text-align:center;font-size:.66rem;color:var(--mute);opacity:.7}
+
+/* notice reader (opens when a notice is tapped on Home) */
+.ncard{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ncard:focus-visible{outline:2px solid var(--gold,#c8963a);outline-offset:2px}
+.nlock{overflow:hidden}
+.nsh{position:fixed;inset:0;z-index:80;display:flex;align-items:flex-end;justify-content:center;padding:0 0 env(safe-area-inset-bottom,0px);background:rgba(12,8,24,.55);animation:nsf .2s ease-out}
+.nsh[hidden]{display:none}
+@keyframes nsf{from{opacity:0}}
+.nsb{position:relative;width:min(520px,100%);max-height:82vh;max-height:82dvh;overflow-y:auto;overscroll-behavior:contain;padding:22px 20px 24px;border-radius:26px 26px 0 0;outline:none;background:var(--pill,#fff);color:var(--ink);border:1px solid var(--line);border-bottom:0;box-shadow:0 -24px 60px -20px rgba(22,17,43,.55);animation:nsu .28s cubic-bezier(.2,.9,.3,1)}
+@keyframes nsu{from{transform:translateY(40px);opacity:.4}}
+.nsb .nico{width:42px;height:42px;border-radius:14px;margin-bottom:12px}
+.nsb h3{margin:0;font:800 1.08rem/1.35 var(--font);overflow-wrap:anywhere;padding-right:40px}
+.nsd{display:block;margin-top:4px;font-size:.74rem;font-weight:600;color:var(--gold,#c8963a)}
+.nst{margin:14px 0 0;font-size:.9rem;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere;color:var(--ink)}
+.nsl{display:flex;align-items:center;justify-content:center;margin-top:18px;height:46px;border-radius:14px;text-decoration:none;font:700 .88rem var(--font);color:#2a1c05;background:linear-gradient(140deg,#fff3c4,#f2c46d,#c8963a)}
+.nsl[hidden]{display:none}
+.nsx{position:absolute;top:14px;right:14px;width:36px;height:36px;border:0;border-radius:12px;display:grid;place-items:center;cursor:pointer;background:var(--row);color:var(--ink)}
+.nsx .ico svg{width:16px;height:16px}
+@media (min-width:700px){.nsh{align-items:center}.nsb{border-radius:26px;border-bottom:1px solid var(--line)}}
+@media (prefers-reduced-motion:reduce){.nsh,.nsb{animation:none}}

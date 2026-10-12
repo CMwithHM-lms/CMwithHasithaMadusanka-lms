@@ -1,5 +1,5 @@
 /* core.js: shared data + rules used by every signed-in page.
-   - marks (this student's sample + admin entries + demo cohort)
+   - marks (real marks entered by staff only; there are no demo students)
    - blue verify tick: a student who scores config.verifyAt (80) or more in ANY paper gets a blue tick, shown beside their name everywhere
    - all-island Top 3 per paper (auto), with admin override
    Later the backend replaces load() / directory() / admin() and everything else keeps working.
@@ -34,32 +34,18 @@
     return me;
   }
 
-  /* ---------- demo cohort (only while config.demo is not false) ---------- */
-  const FIRST = ['Kasun', 'Nimali', 'Sahan', 'Dilini', 'Tharindu', 'Hansika', 'Ravindu', 'Sanduni', 'Chamod', 'Ishara', 'Lakshan', 'Menaka', 'Pasindu', 'Rashmi', 'Dinuka', 'Thisari', 'Nuwan', 'Sachini', 'Kavindu', 'Oshadi', 'Janith', 'Amaya', 'Isuru', 'Pavani', 'Dulan', 'Nethmi', 'Yasiru', 'Hirushi', 'Charith', 'Vidusha'];
-  const LAST = ['Perera', 'Silva', 'Fernando', 'Jayasinghe', 'Wickramasinghe', 'Bandara', 'Rajapaksha', 'Gunawardena', 'Herath', 'Dissanayake', 'Senanayake', 'Ratnayake', 'Weerasinghe', 'Karunaratne', 'Amarasinghe'];
-  const demoName = i => FIRST[i % 30] + ' ' + LAST[(i * 4 + Math.floor(i / 30) * 7) % 15];
-
   /* ---------- admin overrides (Admin Panel will write these) ---------- */
   const admin = () => { const a = ls('lms_ach_admin', {}); a.verify = a.verify || {}; a.top3 = a.top3 || {}; return a; };
 
   /* ---------- marks ---------- */
   function load(yr, myId) {
     const M = new Map(), put = r => M.set(key(r), r);
-    const adm = ls('lms_marks', []), cp = C.papers || [];
+    const adm = ls('lms_marks', []), cp = [];   // only real marks (entered by staff). No sample or demo students
     yr = String(yr || who().year); myId = myId || who().sid;
     const names = [...new Set(cp.map(p => p.no).concat(adm.filter(r => String(r.year) === yr).map(r => r.paper)))];
     const pd = {};
     cp.forEach(p => { if (p.date && !pd[p.no]) pd[p.no] = p.date; });
     adm.forEach(r => { if (r.date && String(r.year) === yr && (!pd[r.paper] || r.date < pd[r.paper])) pd[r.paper] = r.date; });
-    if (C.demo !== false) {                         // demo cohort: every mark depends only on (student, paper), so adding a paper never reshuffles old ones
-      const hash = str => { let h = 2166136261; for (const ch of String(str)) { h ^= ch.charCodeAt(0); h = Math.imul(h, 16777619); } return h >>> 0; };
-      const rng = seed => { let s = seed % 2147483647 || 1; s = s * 16807 % 2147483647; return () => (s = s * 16807 % 2147483647) / 2147483647; };
-      for (let i = 0; i < 60; i++) {
-        const b = 30 + rng(hash('base' + i))() * 48;
-        names.forEach(n => { const r = rng(hash(i + '|' + n)); put({ sid: 'D' + i, year: yr, paper: n, pure: clamp(b + (r() - .5) * 30), applied: clamp(b + (r() - .5) * 30), date: pd[n] || '', demo: 1 }); });
-      }
-    }
-    if (myId) cp.forEach(p => put({ sid: myId, year: yr, paper: p.no, pure: p.pure, applied: p.applied, date: p.date || '' }));
     adm.forEach(r => put(Object.assign({}, r, { year: String(r.year) })));
     return [...M.values()];
   }
@@ -67,7 +53,6 @@
   /* ---------- people ---------- */
   function directory() {
     const D = {}, insts = Object.keys(C.institutes || {});
-    if (C.demo !== false) for (let i = 0; i < 60; i++) D['D' + i] = { sid: 'D' + i, name: demoName(i), year: who().year, institute: insts[i % insts.length] || '', demo: 1 };
     const all = ls('lms_profiles', {});
     Object.values(all).forEach(p => { if (p && p.sid) D[p.sid] = { sid: p.sid, name: p.name || '', year: String(p.year || ''), institute: p.institute || '', photo: p.photo || '', school: p.school || '' }; });
     return D;

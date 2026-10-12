@@ -142,7 +142,7 @@
     ach.forEach(a => add('ach:' + a.title + '|' + (a.date || ''), '1', () => ({ type: a.type === 'blue' ? 'blue' : 'gold', icon: a.icon || 'achieve', title: 'New achievement: ' + a.title, link: R('achievements'), body: a.note || '' })));
 
     /* --- notices, tute, attendance --- */
-    (C.notices || []).forEach(n => add('nt:' + n.title + '|' + (n.date || ''), '1', () => ({ type: 'warn', icon: 'bell', title: 'New notice', link: R('dashboard'), body: n.title })));
+    (C.notices || []).forEach(n => n && n.title && add('nt:' + (n.id || n.title) + '|' + (n.date || ''), '1', () => ({ type: 'warn', icon: 'bell', title: 'New notice', link: R('dashboard'), body: n.title })));
     const tr = (C.tute || {})[sid];
     add('tute', tr ? (tr.confirmed ? 1 : 0) + '|' + (tr.stage || 1) + '|' + (tr.courierId || '') : 'none', prev => {
       if (!tr || !tr.confirmed) return null;
