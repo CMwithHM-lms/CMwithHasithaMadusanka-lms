@@ -69,8 +69,10 @@ service cloud.firestore {
     match /marks/{id} { allow read, write: if isStaff(); }
     match /stats/{id} { allow read: if me(); allow write: if isStaff(); }
     match /img/{id} {
-      allow create: if me() && request.resource.data._uid == request.auth.uid && request.resource.data.d is string && request.resource.data.d.size() < 400000;
-      allow read: if me() && (resource.data._uid == request.auth.uid || isOwner() || (resource.data.k != 'kyc' && isAdmin()));
+      // k == 'pub': pictures staff put on the site (class photos, bank logos, brand...). Every signed-in student may see those, nothing else.
+      allow create: if me() && request.resource.data._uid == request.auth.uid && request.resource.data.d is string && request.resource.data.d.size() < 400000
+                       && (request.resource.data.get('k', '') != 'pub' || isAdmin());
+      allow read: if me() && (resource.data._uid == request.auth.uid || resource.data.get('k', '') == 'pub' || isOwner() || (resource.data.get('k', '') != 'kyc' && isAdmin()));
       allow delete: if isOwner();
     }
     // attendance: staff write it (with the student's uid), a student reads only their own

@@ -37,7 +37,7 @@
     if (typeof o === 'string') {
       if (!o.startsWith('data:image')) return o;
       const small = key === 'photo', d = await shrink(o, small ? 240 : 900, small ? 15 : 90), id = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
-      await db.collection('img').doc(id).set({ d, _uid: uid, k: kind === 'kyc' ? 'kyc' : '' });
+      await db.collection('img').doc(id).set({ d, _uid: uid, k: kind === 'kyc' ? 'kyc' : kind === 'pub' ? 'pub' : '' });
       return 'imgref/' + id;
     }
     if (Array.isArray(o)) return Promise.all(o.map(x => img(x, uid, kind, key)));
@@ -68,11 +68,12 @@
     for (const id of Object.keys(prev)) if (!seen.has(id)) { await db.collection('stats').doc(id).delete(); delete prev[id]; }
   }
   const timers = {};
-  function push(key) { clearTimeout(timers[key]); timers[key] = setTimeout(() => doPush(key).catch(e => console.warn('sync', key, e.code || e)), 350); }
+  const fail = (key, e) => { console.warn('sync', key, e.code || e); try { window.dispatchEvent(new CustomEvent('lms-sync-error', { detail: { key, code: (e && e.code) || String(e) } })); } catch (x) {} };
+  function push(key) { clearTimeout(timers[key]); timers[key] = setTimeout(() => doPush(key).catch(e => fail(key, e)), 350); }
   async function doPush(key) {
     const s = SPEC[key], u = auth.currentUser; if (!s || !u) return;
     let v = ls(key, null); if (v == null) return;
-    if (s.t === 'kv') { if (!staff) return; const nv = await img(clean(v), u.uid); if (JSON.stringify(nv) !== JSON.stringify(v)) setLocal(key, nv); return db.collection('kv').doc(key).set({ v: JSON.stringify(nv) }); }
+    if (s.t === 'kv') { if (!staff) return; const nv = await img(clean(v), u.uid, 'pub'); if (JSON.stringify(nv) !== JSON.stringify(v)) setLocal(key, nv); return db.collection('kv').doc(key).set({ v: JSON.stringify(nv) }); }
     const prev = last[key] || (last[key] = {}), col = db.collection(s.col);
     if (s.t === 'arr') {
       const items = s.wrap ? (v.list || []) : v, out = [], ids = new Set();
@@ -187,6 +188,8 @@
   }
   window.LMS_BE = {
     ready: true, auth, db, role: '',
+    /* write a key to the server now and tell the caller if it worked (the Admin Panel uses this for approve / reject) */
+    async sync(key) { clearTimeout(timers[key]); if (!auth.currentUser) return { ok: false, code: 'not-signed-in' }; try { await doPush(key); return { ok: true }; } catch (e) { fail(key, e); return { ok: false, code: (e && e.code) || String(e) }; } },
     /* staff console: students who share a Student ID (only possible if they registered while the sids rule was missing) */
     sidAudit() { const by = {}; Object.keys(ls('lms_profiles', {})).forEach(k => { const p = ls('lms_profiles', {})[k]; if (p && p.sid && !k.startsWith('top_')) (by[p.sid] = by[p.sid] || []).push((p.name || '') + ' ' + (p.phone || k)); }); return Object.keys(by).filter(k => by[k].length > 1).map(k => ({ sid: k, students: by[k] })); },
     async findStudent(id) { try { const s = await db.collection('profiles').where('sid', '==', String(id)).limit(1).get(); if (s.empty) return null; const x = s.docs[0].data(); delete x._k; return x; } catch (e) { return null; } },

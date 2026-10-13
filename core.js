@@ -307,7 +307,7 @@
     classOf: clsOf,
     classTitle: id => { const c = clsOf(id); return c ? c.title + ' · ' + c.month + ' · ' + c.mode : id; },
     approve: id => oEdit(id, o => { o.status = 'approved'; o.approved = Date.now(); o.expires = expiresOf(o); delete o.note; return 'approved'; }),
-    reject: (id, note) => oEdit(id, o => { o.status = 'rejected'; o.note = note || ''; delete o.expires; return 'rejected'; }),
+    reject: (id, note) => oEdit(id, o => { o.status = 'rejected'; o.note = note || ''; delete o.expires; delete o.approved; delete o.extra; return 'rejected'; }),
     extend: (id, days) => oEdit(id, o => { o.extra = (o.extra || 0) + Number(days || 0); if (o.status === 'approved') o.expires = expiresOf(o); return 'extended by ' + days + ' days (total extra ' + o.extra + ')'; })
   };
   window.addEventListener('storage', () => { cache = null; });

@@ -269,7 +269,7 @@
     else if (act === 'cancel') { confirmId = null; refresh(id); }
     else if (act === 'submit') {
       const o = getO(id); if (!o || !o.img) return;
-      o.status = 'pending'; o.submitted = Date.now(); delete o.note;
+      o.status = 'pending'; o.submitted = Date.now(); delete o.note; delete o.approved; delete o.expires; delete o.extra;
       if (!putO(o)) return toast('Could not save. Try again.');
       confirmId = null; refresh(id); toast('Submitted. Waiting for admin');
       sh.querySelector('.shb').scrollTo({ top: 0, behavior: 'smooth' });
@@ -292,5 +292,7 @@
     reject: (id, note) => LMS_ORDERS.reject(id, note)
   };
 
+  /* the admin approves or rejects on another device: refresh by itself */
+  window.addEventListener('lms-data', () => { try { render(); if (!sh.hidden && curId && confirmId == null) refresh(curId); } catch (e) {} });
   syncFilter(); render();
 })();

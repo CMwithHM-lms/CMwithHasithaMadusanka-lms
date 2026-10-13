@@ -271,3 +271,14 @@
 .kst.knx b,.kst.knx small{white-space:normal;overflow:visible;text-overflow:clip;line-height:1.35}
 .kst.knx b{font-size:1rem}
 @media (min-width:700px){.kstats{grid-template-columns:.8fr .8fr 1.6fr}.kst.knx{grid-column:auto}}
+
+/* permanent bank details (read only for students; the Owner edits them in the Site Editor) */
+.kbank{margin:6px 0 18px;padding:16px;border-radius:26px;background:var(--card);border:1px solid var(--line);position:relative;overflow:hidden}
+.kbank::before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:linear-gradient(90deg,#f5d27a,#c8963a,#f5d27a)}
+.kbank[hidden]{display:none}
+.kbank .kbh{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.kbank .kbh .ico svg{width:20px;height:20px;color:var(--gold)}
+.kbank .kbh b{font:800 .98rem var(--font)}
+.kbank .kbs{margin:0 0 6px;color:var(--mute);font-size:.76rem;line-height:1.45}
+.kbank .bk2:first-of-type{margin-top:10px}
+@media (min-width:700px){.kbank .kbl{display:grid;grid-template-columns:1fr 1fr;gap:10px}.kbank .kbl .bk2{margin-top:0}}

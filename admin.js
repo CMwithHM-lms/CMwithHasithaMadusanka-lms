@@ -57,9 +57,17 @@
         const b = e.target.closest('button, img'); if (!b) return; const d = b.dataset;
         if (d.zoom) return lightbox(b.currentSrc || b.src);
         if (d.f) { st.f = d.f; ssSet('lms_payf', st.f); return draw(); }
-        if (d.ok) { toast(O.approve(d.ok) === 'approved' ? 'Approved. The student is notified.' : 'Could not approve'); draw(); P.refreshNav(); }
-        else if (d.no) { const o = O.list().find(x => x.id === d.no); if (o && o.status === 'approved' && !confirm('Cancel this student\'s access?')) return; toast(O.reject(d.no, ($('#n_' + d.no) || {}).value || '') === 'rejected' ? 'Rejected. The student is notified.' : 'Could not reject'); draw(); P.refreshNav(); }
-        else if (d.ex) { const n = +($('#x_' + d.ex) || {}).value; if (!(n > 0)) return toast('Enter the number of days'); toast(O.extend(d.ex, n)); draw(); }
+        /* change it here, then make sure the server really has it (the student only sees what the server has) */
+        const done = async (r, okWord, okMsg, failMsg) => {
+          if (r !== okWord) { toast(failMsg); return draw(); }
+          draw(); P.refreshNav();
+          const be = window.LMS_BE;
+          if (be && be.ready && be.sync) { const s = await be.sync('lms_orders'); if (!s.ok) return toast(failMsg + ' on the server (' + s.code + '). ' + (/permission/.test(s.code) ? 'Sign in with a verified admin email, then try again.' : 'Check the internet and try again.')); }
+          toast(okMsg);
+        };
+        if (d.ok) done(O.approve(d.ok), 'approved', 'Approved. The student is notified.', 'Could not approve');
+        else if (d.no) { const o = O.list().find(x => x.id === d.no); if (o && o.status === 'approved' && !confirm('Cancel this student\'s access?')) return; done(O.reject(d.no, ($('#n_' + d.no) || {}).value || ''), 'rejected', 'Rejected. The student is notified.', 'Could not reject'); }
+        else if (d.ex) { const n = +($('#x_' + d.ex) || {}).value; if (!(n > 0)) return toast('Enter the number of days'); const r = O.extend(d.ex, n); draw(); if (window.LMS_BE && LMS_BE.ready && LMS_BE.sync) LMS_BE.sync('lms_orders').then(s => toast(s.ok ? r : 'Could not extend on the server (' + s.code + ')')); else toast(r); }
       };
     },
 

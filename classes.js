@@ -155,6 +155,23 @@
         <div class="kgrid">${es.map(e => cardHtml(e, i++)).join('')}</div></section>`;
     }).join('');
   }
+  /* ---------- bank details: always visible, read only ---------- */
+  function bankRow(b) {
+    const lg = safeImg(b.logo), ini = String(b.bank || '?').split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
+    return `<div class="bk2"><span class="blogo" style="--bc:${/^#[0-9a-f]{3,8}$/i.test(b.color || '') ? b.color : '#7c3aed'}">${lg ? `<img src="${esc(lg)}" alt="${esc(b.bank)}">` : esc(ini)}</span>
+      <span class="binfo"><b>${esc(b.bank)}</b><small>${esc(b.name || '')}${b.branch ? ' · ' + esc(b.branch) : ''}</small><code>${esc(b.account || '')}</code></span>
+      <button class="cpy" data-act="bcopy" data-v="${esc(String(b.account || '').replace(/\s/g, ''))}" aria-label="Copy account number">${ic('copy')}</button></div>`;
+  }
+  function renderBanks() {
+    const box = $('#kbank'), banks = ((window.LMS_CONFIG.store || {}).banks || []).filter(b => b && b.bank && b.account);
+    if (!banks.length) { box.hidden = true; return; }
+    box.hidden = false;
+    box.innerHTML = `<div class="kbh">${ic('bank')}<b>Bank details for Online classes</b></div><p class="kbs">Pay the class fee to any account below, then send the slip from the Lesson Store.</p><div class="kbl">${banks.map(bankRow).join('')}</div>`;
+  }
+  $('#kbank').addEventListener('click', e => {
+    const a = e.target.closest('[data-act="bcopy"]'); if (!a) return;
+    const v = a.dataset.v; if (navigator.clipboard) navigator.clipboard.writeText(v).then(() => toast('Account number copied'), () => toast(v)); else toast(v);
+  });
   $('#kmon').addEventListener('click', e => { const b = e.target.closest('.kmc'); if (b) { monFilter = b.dataset.m; render(); } });
   $('#kview').addEventListener('click', e => { const a = e.target.closest('.kc'); if (a) openClass(a.dataset.id); });
   $('#kview').addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('kc')) { e.preventDefault(); openClass(e.target.dataset.id); } });
@@ -353,5 +370,7 @@
   tick = setInterval(onTick, 1000);
   window.addEventListener('storage', () => { if (sh.hidden) render(); });
 
-  render();
+  /* the admin approved / rejected on another device (or the Owner changed bank details): refresh without a reload */
+  window.addEventListener('lms-data', () => { if (sh.hidden) { render(); renderBanks(); } });
+  render(); renderBanks();
 })();
