@@ -4,12 +4,12 @@ service cloud.firestore {
     // ---------- who is who ----------
     function me() { return request.auth != null; }
     function mail() { return request.auth.token.email.lower(); }
-    function ver() { return me() && request.auth.token.email_verified == true; }
+    function ver() { return me(); } // Email verification check එක අයින් කළා
     function acc(r) { let p = /databases/$(db)/documents/staff/$(mail() + '__' + r); return exists(p) && get(p).data.status == 'accepted'; }
     // the owner email below must be the same as OWNER in backend.js and ownerEmail in config.js
-    function isOwner() { return ver() && (mail() == 'thiran.anujitha07@gmail.com' || acc('owner')); }
-    function isAdmin() { return isOwner() || (ver() && acc('admin')); }
-    function isStaff() { return isAdmin() || (ver() && acc('analyze')); }
+    function isOwner() { return me() && (mail() == 'thiran.anujitha07@gmail.com' || acc('owner')); }
+    function isAdmin() { return isOwner() || (me() && acc('admin')); }
+    function isStaff() { return isAdmin() || (me() && acc('analyze')); }
     // a student may not change these once they exist
     function same(f) { return !(f in resource.data) || request.resource.data.get(f, null) == resource.data[f]; }
     // an approved payment whose valid days are over may be paid again
@@ -83,11 +83,11 @@ service cloud.firestore {
       allow read: if me() && (resource.data.email == mail() || isAdmin());
       allow create: if isOwner() || (isAdmin() && request.resource.data.role in ['admin', 'analyze'] && request.resource.data.status == 'invited');
       allow delete: if isOwner();
-      allow update: if isOwner() || (ver() && resource.data.email == mail() && resource.data.status == 'invited' && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'at']));
+      allow update: if isOwner() || (me() && resource.data.email == mail() && resource.data.status == 'invited' && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'at']));
     }
     // identity details of staff: only the owner can read them
     match /kyc/{id} {
-      allow create: if ver() && request.resource.data.email == mail();
+      allow create: if me() && request.resource.data.email == mail();
       allow read, update, delete: if isOwner();
     }
     match /kv/{k} {
